@@ -1,0 +1,6 @@
+@ParkLink.Gate_HostAddress = http://localhost:5252
+
+GET {{ParkLink.Gate_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

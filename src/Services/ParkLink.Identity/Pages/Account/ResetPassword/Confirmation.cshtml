@@ -1,0 +1,34 @@
+﻿@page
+@model ParkLink.Identity.Pages.Account.ResetPassword.ConfirmationModel
+
+<div class="card-body text-center">
+
+    <div class="mb-4 text-success">
+        <svg width="64"
+             height="64"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+    </div>
+
+    <h1 class="fw-black mb-3">
+        Password Reset Successful
+    </h1>
+
+    <p class="text-secondary">
+        Your password has been reset successfully.
+        You can now sign in using your new password.
+    </p>
+
+    <a asp-page="/Account/Login/Index"
+       class="btn btn-primary w-100 mt-3">
+        Sign in
+    </a>
+
+</div>

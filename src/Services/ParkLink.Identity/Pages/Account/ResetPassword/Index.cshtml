@@ -1,0 +1,116 @@
+﻿@page
+@model ParkLink.Identity.Pages.Account.ResetPassword.IndexModel
+
+<div class="card-body">
+
+    @if (Model.ResetSuccessful)
+    {
+        <div class="text-center">
+
+            <div class="mb-4">
+                <div class="text-success">
+                    <svg width="64"
+                         height="64"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                </div>
+            </div>
+
+            <h1 class="fw-black mb-3">
+                Password Reset Successful
+            </h1>
+
+            <p class="text-secondary mb-4">
+                Your password has been reset successfully.
+                You can now sign in using your new password.
+            </p>
+
+            <a asp-page="/Account/Login/Index"
+               class="btn btn-primary w-100">
+                Sign in
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <h1 class="fw-black mb-2">
+            Reset Password
+        </h1>
+
+        <p class="fw-light text-secondary mb-4">
+            Enter your new password below.
+        </p>
+
+        <partial name="_ValidationSummary" />
+
+        <form method="post"
+              class="needs-validation"
+              novalidate>
+
+            <input asp-for="Input.Email" type="hidden" />
+            <input asp-for="Input.Token" type="hidden" />
+
+            <div class="mb-3">
+                <label asp-for="Input.Password"
+                       class="form-label fw-bold">
+                    New Password
+                </label>
+
+                <input asp-for="Input.Password"
+                       type="password"
+                       class="form-control"
+                       placeholder="Enter your new password"
+                       autocomplete="new-password"
+                       required />
+
+                <span asp-validation-for="Input.Password"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.ConfirmPassword"
+                       class="form-label fw-bold">
+                    Confirm New Password
+                </label>
+
+                <input asp-for="Input.ConfirmPassword"
+                       type="password"
+                       class="form-control"
+                       placeholder="Confirm your new password"
+                       autocomplete="new-password"
+                       required />
+
+                <span asp-validation-for="Input.ConfirmPassword"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary w-100">
+                Reset Password
+            </button>
+
+        </form>
+
+        <div class="text-center mt-4">
+            <a asp-page="/Account/Login/Index"
+               class="text-decoration-none">
+                Back to Sign in
+            </a>
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

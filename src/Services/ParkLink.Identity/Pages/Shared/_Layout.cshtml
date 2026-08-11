@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="~/assets/img/favicon.ico" type="image/x-icon" />
+    <title>ParkLink</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+</head>
+<body>   
+    <div class="auth-container">
+        <div class="card">
+            @RenderBody()
+        </div>
+    </div>
+
+    @* <script>
+        void(function() {
+          document.querySelectorAll('.needs-validation').forEach(form => {
+            form.addEventListener('submit', event => {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+
+              form.classList.add('was-validated')
+            })
+          })
+        })()
+      </script> *@
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

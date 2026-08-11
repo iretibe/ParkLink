@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	  <UserSecretsId>382f994c-207c-413b-b553-a20c296f423e</UserSecretsId>
+  </PropertyGroup>
+
+	<ItemGroup>
+
+		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.4.7" />
+
+		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.4.7" />
+
+		<PackageReference Include="MailKit" Version="4.17.0" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.10" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.10" />
+
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.10" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
+		<PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.10">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+</Project>

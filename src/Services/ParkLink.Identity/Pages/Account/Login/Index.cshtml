@@ -1,0 +1,94 @@
+@page
+@model ParkLink.Identity.Pages.Login.Index
+
+<div class="card-body">
+    @* <img src="~/assets/img/logo.svg" alt="Mimity admin" width="32" height="32" class="mb-3"> *@
+    <h1 class="fw-black mb-2">User Authentication</h1>
+    <p class="fw-light text-secondary mb-4">Welcome! Please sign in to continue.</p>
+    
+    @if (Model.View.EnableLocalLogin)
+    {
+        <partial name="_ValidationSummary" />
+
+        <form asp-page="/Account/Login/Index" class="needs-validation" novalidate>
+            <input type="hidden" asp-for="Input.ReturnUrl" />
+
+            <div class="mb-3">
+                <label asp-for="Input.Username" class="form-label fw-bold">Username</label>
+                <input asp-for="Input.Username" type="text" class="form-control" id="InputEmail" placeholder="Username" autocomplete="off" autofocus required>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label fw-bold" for="InputPassword">Password</label>
+                <input asp-for="Input.Password" type="password" class="form-control" id="InputPassword" placeholder="Password" required>
+            </div>
+
+            @if (Model.View.AllowRememberLogin)
+            {
+                <div class="mb-3 d-flex justify-content-between align-items-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="Input.RememberLogin" id="remember">
+                        <label class="form-check-label" for="remember" asp-for="Input.RememberLogin">Remember me</label>
+                    </div>
+                    <a asp-page="/Account/ForgotPassword/Index" class="link-primary small text-decoration-none">Forgot password ?</a>
+                </div>
+            }
+
+            <button class="btn btn-primary w-100" name="Input.Button" value="login">Sign in</button>
+
+            @if (Model.View.VisibleExternalProviders.Any())
+            {
+                <div class="divider-text">Or login with</div>
+
+                <div class="d-flex gap-2">
+                    @foreach (var provider in Model.View.VisibleExternalProviders)
+                    {
+                        var cssClass = provider.AuthenticationScheme switch
+                        {
+                            "Google" => "btn-outline-danger",
+                            "Facebook" => "btn-outline-primary",
+                            _ => "btn-outline-secondary"
+                        };
+
+                        <a class="btn btn-sm @cssClass flex-fill d-flex align-items-center justify-content-center gap-2"
+                           asp-page="/ExternalLogin/Challenge"
+                           asp-route-scheme="@provider.AuthenticationScheme"
+                           asp-route-returnUrl="@Model.Input.ReturnUrl">
+
+                            @if (provider.AuthenticationScheme == "Google")
+                            {
+                                <svg width="17"
+                                     height="17"
+                                     viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                          d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.113-5.136 4.113A5.76 5.76 0 0 1 8.24 12.75a5.76 5.76 0 0 1 5.75-5.76c1.517 0 2.893.546 3.974 1.444l3.125-3.125C19.2 3.518 16.516 2.25 13.99 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75c5.617 0 9.332-3.954 9.332-9.497 0-.643-.058-1.264-.167-1.864H12.24Z" />
+                                </svg>
+                            }
+                            else if (provider.AuthenticationScheme == "Facebook")
+                            {
+                                <svg width="17"
+                                     height="17"
+                                     viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                          d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.099 4.388 23.095 10.125 24V15.563H7.078V12.073H10.125V9.413C10.125 6.387 11.917 4.716 14.657 4.716C15.969 4.716 17.344 4.951 17.344 4.951V7.925H15.829C14.34 7.925 13.875 8.855 13.875 9.81V12.073H17.203L16.671 15.563H13.875V24C19.612 23.095 24 18.099 24 12.073Z" />
+                                </svg>
+                            }
+
+                            <span>@provider.DisplayName</span>
+                        </a>
+                    }
+                </div>
+            }
+        </form>
+    }
+
+    <!-- No authentication schemes configured -->
+    @if (!Model.View.EnableLocalLogin &&
+         !Model.View.VisibleExternalProviders.Any())
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>Invalid login request</strong>
+            <br />
+            There are no login schemes configured for this request.
+        </div>
+    }
+</div>

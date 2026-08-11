@@ -1,0 +1,37 @@
+<Solution>
+  <Folder Name="/docs/" />
+  <Folder Name="/Solution Items/">
+    <File Path="CODE_OF_CONDUCT.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Aspire/">
+    <Project Path="src/Aspire/ParkLink.AppHost/ParkLink.AppHost.csproj" Id="24cfb006-07c0-43fd-8819-da49afc3807e" />
+    <Project Path="src/Aspire/ParkLink.ServiceDefaults/ParkLink.ServiceDefaults.csproj" Id="d52bc0e5-fdb8-46b7-98ce-d2e3892b4a54" />
+  </Folder>
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/ParkLink.Shared.Contracts/ParkLink.Shared.Contracts.csproj" Id="01777b57-2666-4dda-817e-8838b248ee6f" />
+    <Project Path="src/BuildingBlocks/ParkLink.SharedKernel/ParkLink.SharedKernel.csproj" Id="43651fa3-0c01-4c52-82d2-6a415864b7c1" />
+  </Folder>
+  <Folder Name="/src/Clients/">
+    <Project Path="src/Clients/ParkLink.Mobile/ParkLink.Mobile.csproj" />
+    <Project Path="src/Clients/ParkLink.Shared/ParkLink.Shared.csproj" />
+    <Project Path="src/Clients/ParkLink.Web/ParkLink.Web.csproj" />
+  </Folder>
+  <Folder Name="/src/Gateway/">
+    <Project Path="src/Gateway/ParkLink.ApiGateway/ParkLink.ApiGateway.csproj" Id="00e3791a-6258-46dc-b6c8-b40af70d3873" />
+  </Folder>
+  <Folder Name="/src/Services/">
+    <Project Path="src/Services/ParkLink.Gate/ParkLink.Gate.csproj" Id="e194af9b-18c8-4973-947c-a1adb7b2a943" />
+    <Project Path="src/Services/ParkLink.Identity/ParkLink.Identity.csproj" Id="1fb3f169-6fdd-408b-b039-39b9228221d9" />
+    <Project Path="src/Services/ParkLink.Notification/ParkLink.Notification.csproj" Id="a642d08a-3a14-4ee9-be7c-47ef4729a56d" />
+    <Project Path="src/Services/ParkLink.Parking/ParkLink.Parking.csproj" Id="03cf0663-1813-42e0-a4e6-30522b7d494a" />
+    <Project Path="src/Services/ParkLink.Payment/ParkLink.Payment.csproj" Id="3afaceee-f55f-4d7a-8041-56b4ea24977f" />
+    <Project Path="src/Services/ParkLink.Reservation/ParkLink.Reservation.csproj" Id="2758053e-7843-429d-9809-1ef859fa133c" />
+    <Project Path="src/Services/ParkLink.Users/ParkLink.Users.csproj" Id="24c36b50-d79b-416c-b377-93307d8bc96e" />
+    <Project Path="src/Services/ParkLink.Vehicle/ParkLink.Vehicle.csproj" Id="12dcff10-d72f-4e5d-bb83-2c13bacc72c5" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>

@@ -1,0 +1,25 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://parking-reservation-api-parklink.127.0.0.1.nip.io:5283",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "PARKLINK_RESERVATION_CONNECTION": "Server=127.0.0.1,14333;Database=parklink-reservationdb;User ID=sa;Password=Admin@2026$;TrustServerCertificate=True"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "https://parking-reservation-api-parklink.127.0.0.1.nip.io:7064;http://parking-reservation-api-parklink.127.0.0.1.nip.io:5283",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "PARKLINK_RESERVATION_CONNECTION": "Server=127.0.0.1,14333;Database=parklink-reservationdb;User ID=sa;Password=Admin@2026$;TrustServerCertificate=True"
+      }
+    }
+  }
+}

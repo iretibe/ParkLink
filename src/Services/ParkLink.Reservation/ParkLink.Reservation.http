@@ -1,0 +1,6 @@
+@ParkLink.Reservation_HostAddress = http://localhost:5283
+
+GET {{ParkLink.Reservation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

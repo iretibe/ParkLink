@@ -1,0 +1,30 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.4.6">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>5bf4481b-0571-44cc-8ad5-1fd24b186efb</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="13.4.6" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="13.4.6" />
+    <PackageReference Include="Aspire.Hosting.Seq" Version="13.4.6" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="13.4.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Clients\ParkLink.Web\ParkLink.Web.csproj" />
+    <ProjectReference Include="..\..\Gateway\ParkLink.ApiGateway\ParkLink.ApiGateway.csproj" />
+    <ProjectReference Include="..\..\Services\ParkLink.Identity\ParkLink.Identity.csproj" />
+    <ProjectReference Include="..\..\Services\ParkLink.Notification\ParkLink.Notification.csproj" />
+    <ProjectReference Include="..\..\Services\ParkLink.Parking\ParkLink.Parking.csproj" />
+    <ProjectReference Include="..\..\Services\ParkLink.Payment\ParkLink.Payment.csproj" />
+    <ProjectReference Include="..\..\Services\ParkLink.Reservation\ParkLink.Reservation.csproj" />
+    <ProjectReference Include="..\..\Services\ParkLink.Users\ParkLink.Users.csproj" />
+    <ProjectReference Include="..\..\Services\ParkLink.Vehicle\ParkLink.Vehicle.csproj" />
+  </ItemGroup>
+
+</Project>

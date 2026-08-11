@@ -1,0 +1,62 @@
+﻿@page
+@model ParkLink.Identity.Pages.Account.ChangePassword.IndexModel
+
+<div class="card-body">
+
+    <h1 class="fw-black mb-2">
+        Change Password
+    </h1>
+
+    <p class="text-secondary mb-4">
+        Update your ParkLink account password.
+    </p>
+
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success">
+            @Model.SuccessMessage
+        </div>
+    }
+
+    <partial name="_ValidationSummary" />
+
+    <form method="post">
+
+        <div class="mb-3">
+            <label asp-for="Input.CurrentPassword"
+                   class="form-label fw-bold">
+            </label>
+
+            <input asp-for="Input.CurrentPassword"
+                   class="form-control"
+                   type="password" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.NewPassword"
+                   class="form-label fw-bold">
+            </label>
+
+            <input asp-for="Input.NewPassword"
+                   class="form-control"
+                   type="password" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.ConfirmNewPassword"
+                   class="form-label fw-bold">
+            </label>
+
+            <input asp-for="Input.ConfirmNewPassword"
+                   class="form-control"
+                   type="password" />
+        </div>
+
+        <button type="submit"
+                class="btn btn-primary w-100">
+            Change Password
+        </button>
+
+    </form>
+
+</div>

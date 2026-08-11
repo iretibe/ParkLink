@@ -1,0 +1,25 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://parking-parkng-api-parklink.127.0.0.1.nip.io:5214",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "PARKLINK_PARKING_CONNECTION": "Server=127.0.0.1,14333;Database=parklink-parkingdb;User ID=sa;Password=Admin@2026$;TrustServerCertificate=True"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "https://parking-parkng-api-parklink.127.0.0.1.nip.io:7009;http://parking-parkng-api-parklink.127.0.0.1.nip.io:5214",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "PARKLINK_PARKING_CONNECTION": "Server=127.0.0.1,14333;Database=parklink-parkingdb;User ID=sa;Password=Admin@2026$;TrustServerCertificate=True"
+      }
+    }
+  }
+}
