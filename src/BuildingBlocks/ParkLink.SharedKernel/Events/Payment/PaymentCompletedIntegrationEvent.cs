@@ -3,9 +3,13 @@
     public sealed record PaymentCompletedIntegrationEvent(
         Guid PaymentId,
         Guid ReservationId,
-        string PaymentReference,
+        string ReservationNumber,
+        string UserId,
+        Guid VehicleId,
         decimal Amount,
         string CurrencyCode,
-        DateTime PaidAtUtc
+        string PaymentReference,
+        string? ProviderReference,
+        DateTime CompletedAtUtc
     ) : IntegrationEvent;
 }
