@@ -25,11 +25,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Aspire\ParkLink.ServiceDefaults\ParkLink.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\ParkLink.Shared.Contracts\ParkLink.Shared.Contracts.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\ParkLink.SharedKernel\ParkLink.SharedKernel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

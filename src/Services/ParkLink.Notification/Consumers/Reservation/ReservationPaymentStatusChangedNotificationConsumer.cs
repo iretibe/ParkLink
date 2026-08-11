@@ -24,7 +24,7 @@ namespace ParkLink.Notification.Consumers.Reservation
             var message = context.Message;
 
             var status =
-                message.PaymentStatus?.ToString()
+                message.NewStatus?.ToString()
                 ?? "Unknown";
 
             var channels =

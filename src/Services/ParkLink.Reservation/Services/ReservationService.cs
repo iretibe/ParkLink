@@ -4,6 +4,7 @@ using ParkLink.Reservation.Data;
 using ParkLink.Reservation.Dtos;
 using ParkLink.Reservation.Enums;
 using ParkLink.Reservation.Models;
+using ParkLink.Shared.Contracts.Enums;
 using ParkLink.SharedKernel.Events.Parking;
 using ParkLink.SharedKernel.Events.Reservation;
 using ParkLink.SharedKernel.Pagination;
@@ -140,9 +141,13 @@ namespace ParkLink.Reservation.Services
                     "Only confirmed reservations can be checked in.");
             }
 
+            var enteredAtUtc = DateTime.UtcNow;
+
             reservation.Status = ReservationStatus.Active;
             reservation.ActualEntryTimeUtc = DateTime.UtcNow;
-            reservation.UpdatedAtUtc = DateTime.UtcNow;
+            reservation.UpdatedAtUtc = enteredAtUtc;
+
+            await _context.SaveChangesAsync(cancellationToken);
 
             await _publishEndpoint.Publish(
                 new VehicleEnteredParkingLotIntegrationEvent(
@@ -158,9 +163,8 @@ namespace ParkLink.Reservation.Services
                     request.RfidTag,
                     request.OcrPlateNumber,
                     reservation.UpdatedAtUtc),
-                cancellationToken);
-
-            await _context.SaveChangesAsync(cancellationToken);
+                cancellationToken
+            );
 
             return MapToDetailsDto(reservation);
         }
@@ -176,9 +180,11 @@ namespace ParkLink.Reservation.Services
                     "Only active reservations can be checked out.");
             }
 
+            var exitedAtUtc = DateTime.UtcNow;
+
             reservation.Status = ReservationStatus.Completed;
             reservation.ActualExitTimeUtc = DateTime.UtcNow;
-            reservation.UpdatedAtUtc = DateTime.UtcNow;
+            reservation.UpdatedAtUtc = exitedAtUtc;
 
             await _context.SaveChangesAsync(cancellationToken);
 
@@ -196,7 +202,8 @@ namespace ParkLink.Reservation.Services
                     request.RfidTag,
                     request.OcrPlateNumber,
                     reservation.UpdatedAtUtc),
-                cancellationToken);
+                cancellationToken
+            );
 
             return MapToDetailsDto(reservation);
         }

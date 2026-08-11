@@ -1,5 +1,6 @@
-﻿using ParkLink.Notification.Enums;
-using ParkLink.SharedKernel.Events.Reservation;
+﻿using ParkLink.Notification.Dtos;
+using ParkLink.Notification.Enums;
+using ParkLink.SharedKernel.Pagination;
 
 namespace ParkLink.Notification.Services
 {
@@ -18,20 +19,35 @@ namespace ParkLink.Notification.Services
             CancellationToken cancellationToken = default);
         Task MarkAllAsReadAsync(string userId,
             CancellationToken cancellationToken = default);
-        Task SendReservationConfirmedAsync(
-            ReservationConfirmedIntegrationEvent message,
+        Task<PagedResult<NotificationListItemDto>> GetNotificationsAsync(
+            string userId, NotificationSearchRequest request,
             CancellationToken cancellationToken = default);
-        Task SendReservationCancelledAsync(
-            ReservationCancelledIntegrationEvent message,
+        Task<PagedResult<NotificationListItemDto>> GetUnreadNotificationsAsync(
+            string userId, NotificationSearchRequest request,
             CancellationToken cancellationToken = default);
-        Task SendReservationExpiredAsync(
-            ReservationExpiredIntegrationEvent message,
+        Task<NotificationDetailsDto?> GetNotificationByIdAsync(
+            Guid notificationId, string userId,
             CancellationToken cancellationToken = default);
-        Task SendReservationCompletedAsync(
-            ReservationCompletedIntegrationEvent message,
+        Task DeleteNotificationAsync(Guid notificationId, string userId,
             CancellationToken cancellationToken = default);
-        Task SendVehicleNotificationAsync(Guid userId,
-            string title, string message,
+        Task<NotificationStatisticsDto> GetStatisticsAsync(string userId,
             CancellationToken cancellationToken = default);
+
+
+        //Task SendReservationConfirmedAsync(
+        //    ReservationConfirmedIntegrationEvent message,
+        //    CancellationToken cancellationToken = default);
+        //Task SendReservationCancelledAsync(
+        //    ReservationCancelledIntegrationEvent message,
+        //    CancellationToken cancellationToken = default);
+        //Task SendReservationExpiredAsync(
+        //    ReservationExpiredIntegrationEvent message,
+        //    CancellationToken cancellationToken = default);
+        //Task SendReservationCompletedAsync(
+        //    ReservationCompletedIntegrationEvent message,
+        //    CancellationToken cancellationToken = default);
+        //Task SendVehicleNotificationAsync(Guid userId,
+        //    string title, string message,
+        //    CancellationToken cancellationToken = default);
     }
 }

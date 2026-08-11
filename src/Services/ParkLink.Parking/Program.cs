@@ -141,6 +141,8 @@ app.UseExceptionHandler();
 
 app.UseParkLinkCorrelationId();
 
+app.UseCors("CorsPolicy");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
