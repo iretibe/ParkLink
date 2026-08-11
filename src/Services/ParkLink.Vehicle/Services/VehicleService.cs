@@ -53,7 +53,9 @@ namespace ParkLink.Vehicle.Services
 
             await _publishEndpoint.Publish(
                 new VehicleStatusChangedIntegrationEvent(
-                    vehicle.Id, vehicle.OwnerId,
+                    vehicle.Id, 
+                    vehicle.LicensePlateNumber,
+                    vehicle.OwnerId,
                     vehicle.Status.ToString(), 
                     VehicleStatus.Verified.ToString(),                     
                     administratorId, request?.Reason),
@@ -323,7 +325,9 @@ namespace ParkLink.Vehicle.Services
 
             await _publishEndpoint.Publish(
                 new VehicleStatusChangedIntegrationEvent(
-                    vehicle.Id, vehicle.OwnerId,
+                    vehicle.Id, 
+                    vehicle.LicensePlateNumber,
+                    vehicle.OwnerId,
                     oldStatus.ToString(), VehicleStatus.Suspended.ToString(),
                     administratorId, request?.Reason),
                 cancellationToken);
@@ -411,8 +415,9 @@ namespace ParkLink.Vehicle.Services
 
             await _publishEndpoint.Publish(
                 new VehicleStatusChangedIntegrationEvent(
-                    vehicle.Id, vehicle.OwnerId, VehicleStatus.Pending.ToString(),
-                    vehicle.Status.ToString(), administratorId, request?.Reason), 
+                    vehicle.Id, vehicle.LicensePlateNumber, vehicle.OwnerId, 
+                    VehicleStatus.Pending.ToString(), vehicle.Status.ToString(),
+                    administratorId, request?.Reason), 
                 cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);

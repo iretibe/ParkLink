@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ParkLink.Parking.Dtos.ParkingSlots;
 using ParkLink.Parking.Enums;
 using ParkLink.Parking.Services;
+using ParkLink.Shared.Contracts.Enums;
 
 namespace ParkLink.Parking.Controllers
 {
