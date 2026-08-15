@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ParkLink.Reservation.Data;
 using ParkLink.Reservation.Enums;
+using ParkLink.Shared.Contracts.Enums;
 using ParkLink.SharedKernel.Events.Payment;
 
 namespace ParkLink.Reservation.Messaging.Consumers

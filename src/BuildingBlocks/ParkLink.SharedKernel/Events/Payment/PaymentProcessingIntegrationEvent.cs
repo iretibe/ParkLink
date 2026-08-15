@@ -1,14 +1,14 @@
 ﻿namespace ParkLink.SharedKernel.Events.Payment
 {
-    public sealed record PaymentAuthorizedIntegrationEvent(
+    public sealed record PaymentProcessingIntegrationEvent(
         Guid PaymentId,
         Guid ReservationId,
         string ReservationNumber,
         string UserId,
         Guid VehicleId,
-        string PaymentReference,
         decimal Amount,
         string CurrencyCode,
-        DateTime AuthorizedAtUtc
+        string? PaymentReference,
+        DateTime ProcessingStartedAtUtc
     ) : IntegrationEvent;
 }

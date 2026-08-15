@@ -1,4 +1,5 @@
 ﻿using ParkLink.Reservation.Enums;
+using ParkLink.Shared.Contracts.Enums;
 
 namespace ParkLink.Reservation.Dtos
 {

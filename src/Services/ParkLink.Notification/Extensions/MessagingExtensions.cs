@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using ParkLink.Notification.Consumers.Payment;
 using ParkLink.Notification.Consumers.Reservation;
 using ParkLink.Notification.Consumers.Vehicle;
 using ParkLink.Notification.Data;
@@ -30,6 +31,12 @@ namespace ParkLink.Notification.Extensions
                 x.AddConsumer<ReservationHoldCreatedNotificationConsumer>();
                 x.AddConsumer<ReservationHoldReleasedNotificationConsumer>();
                 x.AddConsumer<ReservationPaymentStatusChangedNotificationConsumer>();
+
+                x.AddConsumer<PaymentProcessingNotificationConsumer>();
+                x.AddConsumer<PaymentAuthorizedNotificationConsumer>();
+                x.AddConsumer<PaymentCompletedNotificationConsumer>();
+                x.AddConsumer<PaymentFailedNotificationConsumer>();
+                x.AddConsumer<PaymentRefundedNotificationConsumer>();
 
                 x.AddEntityFrameworkOutbox<NotificationContext>(options =>
                 {

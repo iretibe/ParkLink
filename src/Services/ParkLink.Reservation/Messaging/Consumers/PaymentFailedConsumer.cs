@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ParkLink.Reservation.Data;
 using ParkLink.Reservation.Enums;
+using ParkLink.Shared.Contracts.Enums;
 using ParkLink.SharedKernel.Events.Payment;
 
 namespace ParkLink.Reservation.Messaging.Consumers
@@ -60,7 +61,7 @@ namespace ParkLink.Reservation.Messaging.Consumers
                 reservation.Status == ReservationStatus.Pending)
             {
                 reservation.Status = ReservationStatus.Cancelled;
-                reservation.CancellationReason = message.Reason;
+                reservation.CancellationReason = message.FailureReason;
                 reservation.CancelledAtUtc = DateTime.UtcNow;
                 reservation.UpdatedAtUtc = DateTime.UtcNow;
             }

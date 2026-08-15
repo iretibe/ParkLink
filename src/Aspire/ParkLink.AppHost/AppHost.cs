@@ -95,6 +95,23 @@ var parkingService = builder
     .WithExternalHttpEndpoints()
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development");
 
+var paymentService = builder
+    .AddProject<Projects.ParkLink_Payment>("parking-payment")
+    .WithUrl("https://parking-payment-api-parklink.127.0.0.1.nip.io:7030")
+    .WithReference(paymentDb)
+    .WithReference(redis)
+    .WithReference(rabbitMq)
+    .WithReference(seq)
+    .WaitFor(identityDb)
+    .WaitFor(paymentDb)
+    .WaitFor(redis)
+    .WaitFor(rabbitMq)
+    .WaitFor(seq)
+    .WithHttpHealthCheck("/alive")
+    //.WithHttpHealthCheck("/health")
+    .WithExternalHttpEndpoints()
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development");
+
 var reservationService = builder
     .AddProject<Projects.ParkLink_Reservation>("parking-reservation")
     .WithUrl("https://parking-reservation-api-parklink.127.0.0.1.nip.io:7064")
@@ -148,14 +165,14 @@ var gatewayService = builder
     .WithReference(userService)
     .WithReference(parkingService)
     .WithReference(reservationService)
-    //.WithReference(paymentService)
+    .WithReference(paymentService)
     .WithReference(vehicleService)
     .WithReference(notificationService)
     .WithReference(redis)
     .WaitFor(userService)
     .WaitFor(parkingService)
     .WaitFor(reservationService)
-    //.WaitFor(paymentService)
+    .WaitFor(paymentService)
     .WaitFor(vehicleService)
     .WaitFor(notificationService)
     .WaitFor(redis)

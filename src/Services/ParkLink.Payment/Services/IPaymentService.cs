@@ -20,5 +20,7 @@ namespace ParkLink.Payment.Services
         Task<PaymentDto> RefundPaymentAsync(
             Guid paymentId, RefundPaymentRequest request,
             CancellationToken cancellationToken = default);
+        Task<PaymentStatisticsDto> GetStatisticsAsync(
+            CancellationToken cancellationToken = default);
     }
 }
