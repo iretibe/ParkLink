@@ -15,6 +15,7 @@ namespace ParkLink.Payment.Dtos
         string? Provider,
         string? ProviderReference,
         string? PaymentReference,
+        string? AuthorizationUrl,
         DateTime CreatedAtUtc,
         DateTime? CompletedAtUtc
     );

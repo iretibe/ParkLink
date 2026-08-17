@@ -37,6 +37,9 @@ namespace ParkLink.Payment.Models
         public DateTime? UpdatedAtUtc { get; set; }
         public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 
+        [MaxLength(1000)]
+        public string? AuthorizationUrl { get; set; }
+
         public ICollection<PaymentTransaction> Transactions { get; set; } = new List<PaymentTransaction>();
     }
 }

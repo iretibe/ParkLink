@@ -1,12 +1,16 @@
 ﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ParkLink.Payment.Data;
 using ParkLink.Payment.Dtos;
+using ParkLink.Payment.Dtos.Paystack;
 using ParkLink.Payment.Enums;
+using ParkLink.Payment.Messages;
 using ParkLink.Payment.Models;
 using ParkLink.Payment.Providers;
 using ParkLink.SharedKernel.Events.Payment;
 using ParkLink.SharedKernel.Pagination;
+using System.Text.Json;
 
 namespace ParkLink.Payment.Services
 {
@@ -123,9 +127,11 @@ namespace ParkLink.Payment.Services
             payment.Provider = provider.Name;
             payment.ProviderReference = providerResult.ProviderReference;
             payment.PaymentReference = providerResult.PaymentReference;
-            payment.Status = providerResult.RequiresAction
-                ? PaymentStatus.Processing
-                : PaymentStatus.Authorized;
+            //payment.Status = providerResult.RequiresAction
+            //    ? PaymentStatus.Processing
+            //    : PaymentStatus.Authorized;
+            payment.Status = PaymentStatus.Processing;
+            payment.AuthorizationUrl = providerResult.AuthorizationUrl;
             payment.AuthorizedAtUtc = payment.Status == PaymentStatus.Authorized
                 ? DateTime.UtcNow
                 : null;
@@ -161,21 +167,27 @@ namespace ParkLink.Payment.Services
             return MapToDto(payment);
         }
 
-        public async Task<PaymentDto?> GetPaymentByIdAsync(Guid paymentId, CancellationToken cancellationToken = default)
+        public async Task<PaymentDto?> GetPaymentByIdAsync(Guid paymentId,
+            string userId, CancellationToken cancellationToken = default)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(userId);
+
             var payment = await _context.Payments
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == paymentId, cancellationToken);
+                .FirstOrDefaultAsync(x => 
+                    x.Id == paymentId && x.UserId == userId, cancellationToken);
 
             return payment == null ? null : MapToDto(payment);
         }
 
         public async Task<PaymentDto?> GetPaymentByReservationIdAsync(
-            Guid reservationId, CancellationToken cancellationToken = default)
+            Guid reservationId, string userId, CancellationToken cancellationToken = default)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(userId);
+
             var payment = await _context.Payments
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.ReservationId == reservationId, cancellationToken);
+                .FirstOrDefaultAsync(x => x.ReservationId == reservationId && x.UserId == userId, cancellationToken);
 
             return payment == null ? null : MapToDto(payment);
         }
@@ -261,6 +273,7 @@ namespace ParkLink.Payment.Services
                     x.Provider,
                     x.ProviderReference,
                     x.PaymentReference,
+                    x.AuthorizationUrl,
                     x.CreatedAtUtc,
                     x.CompletedAtUtc))
                 .ToListAsync(cancellationToken);
@@ -430,11 +443,106 @@ namespace ParkLink.Payment.Services
             return MapToDto(payment);
         }
 
-        public async Task<PaymentDto> VerifyPaymentAsync(Guid paymentId, CancellationToken cancellationToken = default)
+        //public async Task<PaymentDto> VerifyPaymentAsync(Guid paymentId, CancellationToken cancellationToken = default)
+        //{
+        //    var payment = await _context.Payments
+        //        .FirstOrDefaultAsync(x => x.Id == paymentId, cancellationToken)
+        //            ?? throw new KeyNotFoundException($"Payment '{paymentId}' was not found.");
+
+        //    if (string.IsNullOrWhiteSpace(payment.ProviderReference))
+        //    {
+        //        throw new InvalidOperationException(
+        //            "Payment does not have a provider reference.");
+        //    }
+
+        //    var provider = _providerResolver.Resolve(payment.Method);
+
+        //    var result = await provider.VerifyPaymentAsync(
+        //        payment.ProviderReference, cancellationToken
+        //    );
+
+        //    if (!result.Success)
+        //    {
+        //        payment.Status = PaymentStatus.Failed;
+        //        payment.FailureReason = result.FailureReason;
+        //        payment.FailedAtUtc = DateTime.UtcNow;
+        //        payment.UpdatedAtUtc = DateTime.UtcNow;
+
+        //        AddTransaction(
+        //            payment,
+        //            PaymentTransactionType.Payment,
+        //            PaymentStatus.Failed,
+        //            payment.Amount,
+        //            payment.ProviderReference,
+        //            result.FailureReason
+        //        );
+
+        //        await _context.SaveChangesAsync(cancellationToken);
+
+        //        await _publishEndpoint.Publish(
+        //            new PaymentFailedIntegrationEvent(
+        //                payment.Id,
+        //                payment.ReservationId,
+        //                payment.ReservationNumber,
+        //                payment.UserId,
+        //                payment.VehicleId,
+        //                payment.Amount,
+        //                payment.CurrencyCode,
+        //                payment.PaymentReference,
+        //                result.FailureReason ?? "Payment verification failed.",
+        //                payment.FailedAtUtc.Value),
+        //            cancellationToken
+        //        );
+
+        //        return MapToDto(payment);
+        //    }
+
+        //    payment.Status = PaymentStatus.Completed;
+        //    payment.CompletedAtUtc = DateTime.UtcNow;
+        //    payment.UpdatedAtUtc = DateTime.UtcNow;
+
+        //    AddTransaction(
+        //        payment,
+        //        PaymentTransactionType.Capture,
+        //        PaymentStatus.Completed,
+        //        payment.Amount,
+        //        payment.ProviderReference,
+        //        null
+        //    );
+
+        //    await _context.SaveChangesAsync(cancellationToken);
+
+        //    await _publishEndpoint.Publish(
+        //        new PaymentCompletedIntegrationEvent(
+        //            payment.Id,
+        //            payment.ReservationId,
+        //            payment.ReservationNumber,
+        //            payment.UserId,
+        //            payment.VehicleId,
+        //            payment.Amount,
+        //            payment.CurrencyCode,
+        //            payment.PaymentReference!,
+        //            payment.ProviderReference,
+        //            payment.CompletedAtUtc.Value),
+        //        cancellationToken
+        //    );
+
+        //    return MapToDto(payment);
+        //}
+
+        public async Task<PaymentDto> VerifyPaymentAsync(Guid paymentId, string userId, CancellationToken cancellationToken = default)
         {
             var payment = await _context.Payments
-                .FirstOrDefaultAsync(x => x.Id == paymentId, cancellationToken)
-                    ?? throw new KeyNotFoundException($"Payment '{paymentId}' was not found.");
+                .FirstOrDefaultAsync(x => x.Id == paymentId && x.UserId == userId, cancellationToken)
+                ?? throw new KeyNotFoundException($"Payment '{paymentId}' was not found.");
+
+            // Idempotent verification.
+            if (payment.Status == PaymentStatus.Completed ||
+                payment.Status == PaymentStatus.Refunded ||
+                payment.Status == PaymentStatus.PartiallyRefunded)
+            {
+                return MapToDto(payment);
+            }
 
             if (string.IsNullOrWhiteSpace(payment.ProviderReference))
             {
@@ -444,14 +552,17 @@ namespace ParkLink.Payment.Services
 
             var provider = _providerResolver.Resolve(payment.Method);
 
-            var result = await provider.VerifyPaymentAsync(
-                payment.ProviderReference, cancellationToken
-            );
+            var result = await provider.VerifyPaymentAsync(payment.ProviderReference, cancellationToken);
 
             if (!result.Success)
             {
+                if (payment.Status == PaymentStatus.Completed)
+                {
+                    return MapToDto(payment);
+                }
+
                 payment.Status = PaymentStatus.Failed;
-                payment.FailureReason = result.FailureReason;
+                payment.FailureReason = result.FailureReason ?? "Payment verification failed.";
                 payment.FailedAtUtc = DateTime.UtcNow;
                 payment.UpdatedAtUtc = DateTime.UtcNow;
 
@@ -461,7 +572,7 @@ namespace ParkLink.Payment.Services
                     PaymentStatus.Failed,
                     payment.Amount,
                     payment.ProviderReference,
-                    result.FailureReason
+                    payment.FailureReason
                 );
 
                 await _context.SaveChangesAsync(cancellationToken);
@@ -476,11 +587,16 @@ namespace ParkLink.Payment.Services
                         payment.Amount,
                         payment.CurrencyCode,
                         payment.PaymentReference,
-                        result.FailureReason ?? "Payment verification failed.",
+                        payment.FailureReason,
                         payment.FailedAtUtc.Value),
-                    cancellationToken
-                );
+                    cancellationToken);
 
+                return MapToDto(payment);
+            }
+
+            // Prevent a second completion caused by a concurrent request.
+            if (payment.Status == PaymentStatus.Completed)
+            {
                 return MapToDto(payment);
             }
 
@@ -510,7 +626,8 @@ namespace ParkLink.Payment.Services
                     payment.CurrencyCode,
                     payment.PaymentReference!,
                     payment.ProviderReference,
-                    payment.CompletedAtUtc.Value),
+                    payment.CompletedAtUtc.Value
+                ),
                 cancellationToken
             );
 
@@ -552,8 +669,209 @@ namespace ParkLink.Payment.Services
                 payment.Provider,
                 payment.ProviderReference,
                 payment.PaymentReference,
+                payment.AuthorizationUrl,
                 payment.CreatedAtUtc,
                 payment.CompletedAtUtc
+            );
+        }
+
+        public async Task ProcessPaystackWebhookAsync(string payload, CancellationToken cancellationToken = default)
+        {
+            var webhook = JsonSerializer
+                .Deserialize<PaystackWebhookRequest>(payload,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            if (webhook == null)
+            {
+                throw new InvalidOperationException(
+                    "Invalid Paystack webhook payload.");
+            }
+
+            if (string.IsNullOrWhiteSpace(webhook.Event))
+            {
+                return;
+            }
+
+            var reference = webhook.Data?.Reference;
+
+            if (string.IsNullOrWhiteSpace(reference))
+            {
+                _logger.LogWarning(
+                    "Paystack webhook {Event} contains no reference.",
+                    webhook.Event
+                );
+
+                return;
+            }
+
+            var eventKey = $"{webhook.Event}:{reference}";
+
+            var alreadyProcessed = await _context.PaymentWebhookEvents
+                .AnyAsync(x => 
+                    x.EventKey == eventKey && x.Processed, cancellationToken
+                );
+
+            if (alreadyProcessed)
+            {
+                _logger.LogInformation(
+                    "Paystack webhook {EventKey} already processed.",
+                    eventKey
+                );
+
+                return;
+            }
+
+            var webhookEvent = await _context.PaymentWebhookEvents
+                .FirstOrDefaultAsync(x => x.EventKey == eventKey, cancellationToken);
+
+            if (webhookEvent == null)
+            {
+                webhookEvent = new PaymentWebhookEvent
+                {
+                    Id = Guid.NewGuid(),
+                    EventType = webhook.Event,
+                    EventKey = eventKey,
+                    ProviderReference = reference,
+                    Payload = payload,
+                    ReceivedAtUtc = DateTime.UtcNow,
+                    Processed = false
+                };
+
+                _context.PaymentWebhookEvents.Add(webhookEvent);
+
+                try
+                {
+                    await _publishEndpoint.Publish(
+                        new PaystackWebhookReceived(payload), cancellationToken);
+
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+                catch (DbUpdateException)
+                {
+                    // Another webhook request inserted the same event.
+                    return;
+                }
+            }
+
+            switch (webhook.Event.ToLowerInvariant())
+            {
+                case "charge.success":
+                    await ProcessChargeSuccessWebhookAsync(webhook, cancellationToken);
+                    break;
+
+                default:
+                    _logger.LogInformation(
+                        "Ignoring unsupported Paystack webhook event {Event}.",
+                        webhook.Event);
+                    break;
+            }
+
+            webhookEvent.Processed = true;
+            webhookEvent.ProcessedAtUtc = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        private async Task ProcessChargeSuccessWebhookAsync(
+            PaystackWebhookRequest webhook, CancellationToken cancellationToken)
+        {
+            var data = webhook.Data;
+
+            if (data == null || string.IsNullOrWhiteSpace(data.Reference))
+            {
+                return;
+            }
+
+            var payment = await _context.Payments
+                .FirstOrDefaultAsync(
+                    x => x.ProviderReference == data.Reference ||
+                        x.PaymentReference == data.Reference,
+                    cancellationToken
+                );
+
+            if (payment == null)
+            {
+                _logger.LogWarning(
+                    "No ParkLink payment found for Paystack reference {Reference}.",
+                    data.Reference
+                );
+
+                return;
+            }
+
+            // Already completed means webhook is a duplicate.
+            if (payment.Status == PaymentStatus.Completed ||
+                payment.Status == PaymentStatus.Refunded ||
+                payment.Status == PaymentStatus.PartiallyRefunded)
+            {
+                return;
+            }
+
+            var webhookAmount = data.Amount / 100m;
+            if (webhookAmount != payment.Amount)
+            {
+                throw new InvalidOperationException(
+                    $"Paystack amount mismatch for payment {payment.Id}. " +
+                    $"Expected {payment.Amount}, received {webhookAmount}.");
+            }
+
+            if (!string.Equals(data.Currency, payment.CurrencyCode, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"Paystack currency mismatch for payment {payment.Id}.");
+            }
+
+            // Verify with Paystack before giving the transaction a completed state.
+            var provider = _providerResolver.Resolve(payment.Method);
+            var verification = await provider.VerifyPaymentAsync(data.Reference, cancellationToken);
+
+            if (!verification.Success)
+            {
+                payment.Status = PaymentStatus.Failed;
+
+                payment.FailureReason =
+                    verification.FailureReason ??
+                    "Paystack webhook verification failed.";
+
+                payment.FailedAtUtc = DateTime.UtcNow;
+                payment.UpdatedAtUtc = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return;
+            }
+
+            payment.Status = PaymentStatus.Completed;
+            payment.CompletedAtUtc = DateTime.UtcNow;
+            payment.UpdatedAtUtc = DateTime.UtcNow;
+
+            AddTransaction(
+                payment,
+                PaymentTransactionType.Capture,
+                PaymentStatus.Completed,
+                payment.Amount,
+                payment.ProviderReference,
+                "Completed via Paystack webhook."
+            );
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            await _publishEndpoint.Publish(
+                new PaymentCompletedIntegrationEvent(
+                    payment.Id,
+                    payment.ReservationId,
+                    payment.ReservationNumber,
+                    payment.UserId,
+                    payment.VehicleId,
+                    payment.Amount,
+                    payment.CurrencyCode,
+                    payment.PaymentReference!,
+                    payment.ProviderReference,
+                    payment.CompletedAtUtc.Value),
+                cancellationToken
             );
         }
     }

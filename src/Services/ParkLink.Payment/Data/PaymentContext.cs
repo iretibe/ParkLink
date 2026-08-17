@@ -12,6 +12,7 @@ namespace ParkLink.Payment.Data
 
         public DbSet<Models.Payment> Payments => Set<Models.Payment>();
         public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
+        public DbSet<PaymentWebhookEvent> PaymentWebhookEvents => Set<PaymentWebhookEvent>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,6 +20,7 @@ namespace ParkLink.Payment.Data
 
             ConfigurePayment(modelBuilder);
             ConfigurePaymentTransaction(modelBuilder);
+            ConfigurePaymentWebhookEvent(modelBuilder);
 
             modelBuilder.AddInboxStateEntity();
             modelBuilder.AddOutboxMessageEntity();
@@ -89,6 +91,9 @@ namespace ParkLink.Payment.Data
             // One active Payment aggregate per reservation.
             entity.HasIndex(x => x.ReservationId)
                 .IsUnique();
+
+            entity.Property(x => x.AuthorizationUrl)
+                .HasMaxLength(1000);
         }
 
         private static void ConfigurePaymentTransaction(ModelBuilder modelBuilder)
@@ -121,6 +126,38 @@ namespace ParkLink.Payment.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(x => x.PaymentId);
+
+            entity.HasIndex(x => x.ProviderReference);
+        }
+
+        private static void ConfigurePaymentWebhookEvent(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<PaymentWebhookEvent>();
+
+            entity.ToTable("PaymentWebhookEvents");
+
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.EventType)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(x => x.EventKey)
+                .IsRequired()
+                .HasMaxLength(300);
+
+            entity.Property(x => x.ProviderReference)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(x => x.Payload)
+                .IsRequired();
+
+            entity.Property(x => x.FailureReason)
+                .HasMaxLength(500);
+
+            entity.HasIndex(x => x.EventKey)
+                .IsUnique();
 
             entity.HasIndex(x => x.ProviderReference);
         }

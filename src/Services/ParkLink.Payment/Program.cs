@@ -32,6 +32,8 @@ builder.Services.AddPaymentProviders();
 
 builder.Services.AddPaymentMessaging(builder.Configuration);
 
+builder.Services.AddPaymentServices();
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -88,6 +90,15 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireClaim("scope", "paymentapi");
+    });
+
+    options.AddPolicy("PaymentAdmin", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+
+        policy.RequireClaim("scope", "paymentapi");
+
+        policy.RequireRole("Admin", "Finance", "ParkingOperator");
     });
 });
 

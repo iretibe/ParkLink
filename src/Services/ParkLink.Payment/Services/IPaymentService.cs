@@ -9,18 +9,20 @@ namespace ParkLink.Payment.Services
             string userId, CreatePaymentRequest request,
             CancellationToken cancellationToken = default);
         Task<PaymentDto?> GetPaymentByIdAsync(Guid paymentId,
-            CancellationToken cancellationToken = default);
+            string UserId, CancellationToken cancellationToken = default);
         Task<PaymentDto?> GetPaymentByReservationIdAsync(
-            Guid reservationId, CancellationToken cancellationToken = default);
+            Guid reservationId, string userId, CancellationToken cancellationToken = default);
         Task<PagedResult<PaymentDto>> GetPaymentsAsync(
             PaymentSearchRequest request,
             CancellationToken cancellationToken = default);
         Task<PaymentDto> VerifyPaymentAsync(Guid paymentId,
-            CancellationToken cancellationToken = default);
+            string userId, CancellationToken cancellationToken = default);
         Task<PaymentDto> RefundPaymentAsync(
             Guid paymentId, RefundPaymentRequest request,
             CancellationToken cancellationToken = default);
         Task<PaymentStatisticsDto> GetStatisticsAsync(
+            CancellationToken cancellationToken = default);
+        Task ProcessPaystackWebhookAsync(string payload,
             CancellationToken cancellationToken = default);
     }
 }

@@ -120,18 +120,6 @@ if (app.Environment.IsDevelopment())
         options.OAuthUsePkce();
     });
 }
-else
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint(builder.Configuration["AppSettings:Folder"] + "/swagger/v1/swagger.json", "Reservation System API");
-        options.OAuthClientId(builder.Configuration["ParkinLinkReservationSettings:ApiName"]);
-        options.OAuthRealm(" ");
-        options.OAuthAppName(" ");
-        options.OAuthUsePkce();
-    });
-}
 
 app.UseHttpsRedirection();
 

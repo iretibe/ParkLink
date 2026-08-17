@@ -14,6 +14,7 @@ namespace ParkLink.Payment.Extensions
             {
                 x.AddConsumer<ReservationCreatedConsumer>();
                 x.AddConsumer<ReservationConfirmedConsumer>();
+                x.AddConsumer<PaystackWebhookConsumer>();
 
                 x.AddEntityFrameworkOutbox<PaymentContext>(
                     options =>
@@ -44,8 +45,7 @@ namespace ParkLink.Payment.Extensions
             return services;
         }
 
-        public static IServiceCollection AddPaymentProviders(
-            this IServiceCollection services)
+        public static IServiceCollection AddPaymentProviders(this IServiceCollection services)
         {
             services.AddScoped<IPaymentProviderResolver, PaymentProviderResolver>();
             services.AddScoped<IPaymentProvider, MockPaymentProvider>();
