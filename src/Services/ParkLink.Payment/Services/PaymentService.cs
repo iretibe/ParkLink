@@ -781,7 +781,7 @@ namespace ParkLink.Payment.Services
                 try
                 {
                     await _publishEndpoint.Publish(
-                        new PaystackWebhookReceived(payload), cancellationToken);
+                        new PaystackWebhookReceived(payload, signature), cancellationToken);
 
                     await _context.SaveChangesAsync(cancellationToken);
                 }

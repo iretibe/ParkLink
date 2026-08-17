@@ -1,4 +1,4 @@
 ﻿namespace ParkLink.Payment.Messages
 {
-    public sealed record PaystackWebhookReceived(string Payload);
+    public sealed record PaystackWebhookReceived(string Payload, string Signature);
 }

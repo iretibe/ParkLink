@@ -22,7 +22,9 @@ namespace ParkLink.Payment.Consumers
             _logger.LogInformation("Processing Paystack webhook.");
 
             await _paymentService.ProcessPaystackWebhookAsync(
-                context.Message.Payload, context.CancellationToken
+                context.Message.Payload, 
+                context.Message.Signature, 
+                context.CancellationToken
             );
         }
     }
