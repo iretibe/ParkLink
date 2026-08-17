@@ -57,8 +57,8 @@ builder.Services.AddSwaggerGen(options =>
         {
             AuthorizationCode = new OpenApiOAuthFlow
             {
-                AuthorizationUrl = new Uri(builder.Configuration["ParkinLinkVehicleSettings:AuthorityUrl"]!),
-                TokenUrl = new Uri(builder.Configuration["ParkinLinkVehicleSettings:TokenUrl"]!),
+                AuthorizationUrl = new Uri(builder.Configuration["ParkLinkVehicleSettings:AuthorityUrl"]!),
+                TokenUrl = new Uri(builder.Configuration["ParkLinkVehicleSettings:TokenUrl"]!),
                 Scopes = new Dictionary<string, string>
                 {
                     { "vehicleapi", "Vehicle System API" }
@@ -83,9 +83,9 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        options.Authority = builder.Configuration["ParkinLinkVehicleSettings:Authority"];
-        options.RequireHttpsMetadata = bool.Parse(builder.Configuration["ParkinLinkVehicleSettings:RequireHttpsMetadata"]!);
-        options.SaveToken = bool.Parse(builder.Configuration["ParkinLinkVehicleSettings:SaveToken"]!);
+        options.Authority = builder.Configuration["ParkLinkVehicleSettings:Authority"];
+        options.RequireHttpsMetadata = bool.Parse(builder.Configuration["ParkLinkVehicleSettings:RequireHttpsMetadata"]!);
+        options.SaveToken = bool.Parse(builder.Configuration["ParkLinkVehicleSettings:SaveToken"]!);
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateAudience = false,
@@ -108,28 +108,23 @@ builder.Services.AddHealthChecks();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (builder.Configuration.GetValue<bool>("Swagger:Enabled"))
 {
     app.UseSwagger();
+
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Vehicle System API");
-        options.OAuthClientId(builder.Configuration["ParkinLinkVehicleSettings:ApiName"]);
-        options.OAuthRealm(" ");
-        options.OAuthAppName(" ");
+        options.SwaggerEndpoint(
+            "./v1/swagger.json",
+            "ParkLink Vehicle API v1"
+        );
+
+        options.OAuthClientId(
+            builder.Configuration["Swagger:OAuthClientId"]);
+
         options.OAuthUsePkce();
-    });
-}
-else
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint(builder.Configuration["AppSettings:Folder"] + "/swagger/v1/swagger.json", "Vehicle System API");
-        options.OAuthClientId(builder.Configuration["ParkinLinkVehicleSettings:ApiName"]);
-        options.OAuthRealm(" ");
-        options.OAuthAppName(" ");
-        options.OAuthUsePkce();
+
+        options.DisplayRequestDuration();
     });
 }
 

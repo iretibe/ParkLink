@@ -57,8 +57,8 @@ builder.Services.AddSwaggerGen(options =>
         {
             AuthorizationCode = new OpenApiOAuthFlow
             {
-                AuthorizationUrl = new Uri(builder.Configuration["ParkinLinkReservationSettings:AuthorityUrl"]!),
-                TokenUrl = new Uri(builder.Configuration["ParkinLinkReservationSettings:TokenUrl"]!),
+                AuthorizationUrl = new Uri(builder.Configuration["ParkLinkReservationSettings:AuthorityUrl"]!),
+                TokenUrl = new Uri(builder.Configuration["ParkLinkReservationSettings:TokenUrl"]!),
                 Scopes = new Dictionary<string, string>
                 {
                     { "reservationapi", "Reservation System API" }
@@ -83,9 +83,9 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        options.Authority = builder.Configuration["ParkinLinkReservationSettings:Authority"];
-        options.RequireHttpsMetadata = bool.Parse(builder.Configuration["ParkinLinkReservationSettings:RequireHttpsMetadata"]!);
-        options.SaveToken = bool.Parse(builder.Configuration["ParkinLinkReservationSettings:SaveToken"]!);
+        options.Authority = builder.Configuration["ParkLinkReservationSettings:Authority"];
+        options.RequireHttpsMetadata = bool.Parse(builder.Configuration["ParkLinkReservationSettings:RequireHttpsMetadata"]!);
+        options.SaveToken = bool.Parse(builder.Configuration["ParkLinkReservationSettings:SaveToken"]!);
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateAudience = false,
@@ -108,16 +108,23 @@ builder.Services.AddHealthChecks();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (builder.Configuration.GetValue<bool>("Swagger:Enabled"))
 {
     app.UseSwagger();
+
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Reservation System API");
-        options.OAuthClientId(builder.Configuration["ParkinLinkReservationSettings:ApiName"]);
-        options.OAuthRealm(" ");
-        options.OAuthAppName(" ");
+        options.SwaggerEndpoint(
+            "./v1/swagger.json",
+            "ParkLink Reservation API v1"
+        );
+
+        options.OAuthClientId(
+            builder.Configuration["Swagger:OAuthClientId"]);
+
         options.OAuthUsePkce();
+
+        options.DisplayRequestDuration();
     });
 }
 

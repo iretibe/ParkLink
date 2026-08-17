@@ -40,6 +40,13 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "ParkLink Payment API",
+        Version = "v1",
+        Description = "Payment processing API for ParkLink."
+    });
+
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.OAuth2,
@@ -47,8 +54,8 @@ builder.Services.AddSwaggerGen(options =>
         {
             AuthorizationCode = new OpenApiOAuthFlow
             {
-                AuthorizationUrl = new Uri(builder.Configuration["ParkinLinkPaymentSettings:AuthorityUrl"]!),
-                TokenUrl = new Uri(builder.Configuration["ParkinLinkPaymentSettings:TokenUrl"]!),
+                AuthorizationUrl = new Uri(builder.Configuration["ParkLinkPaymentSettings:AuthorityUrl"]!),
+                TokenUrl = new Uri(builder.Configuration["ParkLinkPaymentSettings:TokenUrl"]!),
                 Scopes = new Dictionary<string, string>
                 {
                     { "paymentapi", "Payment System API" }
@@ -73,9 +80,9 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        options.Authority = builder.Configuration["ParkinLinkPaymentSettings:Authority"];
-        options.RequireHttpsMetadata = bool.Parse(builder.Configuration["ParkinLinkPaymentSettings:RequireHttpsMetadata"]!);
-        options.SaveToken = bool.Parse(builder.Configuration["ParkinLinkPaymentSettings:SaveToken"]!);
+        options.Authority = builder.Configuration["ParkLinkPaymentSettings:Authority"];
+        options.RequireHttpsMetadata = bool.Parse(builder.Configuration["ParkLinkPaymentSettings:RequireHttpsMetadata"]!);
+        options.SaveToken = bool.Parse(builder.Configuration["ParkLinkPaymentSettings:SaveToken"]!);
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateAudience = false,
@@ -110,10 +117,24 @@ app.UseExceptionHandler();
 
 app.UseParkLinkCorrelationId();
 
-if (app.Environment.IsDevelopment())
+if (builder.Configuration.GetValue<bool>("Swagger:Enabled"))
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint(
+            "./v1/swagger.json",
+            "ParkLink Payment API v1"
+        );
+
+        options.OAuthClientId(
+            builder.Configuration["Swagger:OAuthClientId"]);
+
+        options.OAuthUsePkce();
+
+        options.DisplayRequestDuration();
+    });
 }
 
 app.UseHttpsRedirection();

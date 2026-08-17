@@ -23,6 +23,6 @@ namespace ParkLink.Payment.Services
         Task<PaymentStatisticsDto> GetStatisticsAsync(
             CancellationToken cancellationToken = default);
         Task ProcessPaystackWebhookAsync(string payload,
-            CancellationToken cancellationToken = default);
+            string signature, CancellationToken cancellationToken = default);
     }
 }

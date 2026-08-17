@@ -97,8 +97,8 @@ builder.Services.AddSwaggerGen(options =>
         {
             AuthorizationCode = new OpenApiOAuthFlow
             {
-                AuthorizationUrl = new Uri(builder.Configuration["ParkinLinkUserSettings:AuthorityUrl"]!),
-                TokenUrl = new Uri(builder.Configuration["ParkinLinkUserSettings:TokenUrl"]!),
+                AuthorizationUrl = new Uri(builder.Configuration["ParkLinkUserSettings:AuthorityUrl"]!),
+                TokenUrl = new Uri(builder.Configuration["ParkLinkUserSettings:TokenUrl"]!),
                 Scopes = new Dictionary<string, string>
                 {
                     { "userapi", "User System API" }
@@ -123,9 +123,9 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        options.Authority = builder.Configuration["ParkinLinkUserSettings:Authority"];
-        options.RequireHttpsMetadata = bool.Parse(builder.Configuration["ParkinLinkUserSettings:RequireHttpsMetadata"]!);
-        options.SaveToken = bool.Parse(builder.Configuration["ParkinLinkUserSettings:SaveToken"]!);
+        options.Authority = builder.Configuration["ParkLinkUserSettings:Authority"];
+        options.RequireHttpsMetadata = bool.Parse(builder.Configuration["ParkLinkUserSettings:RequireHttpsMetadata"]!);
+        options.SaveToken = bool.Parse(builder.Configuration["ParkLinkUserSettings:SaveToken"]!);
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateAudience = false,
@@ -163,28 +163,23 @@ builder.Services.AddHealthChecks();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (builder.Configuration.GetValue<bool>("Swagger:Enabled"))
 {
     app.UseSwagger();
+
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "User System API");
-        options.OAuthClientId(builder.Configuration["ParkinLinkUserSettings:ApiName"]);
-        options.OAuthRealm(" ");
-        options.OAuthAppName(" ");
+        options.SwaggerEndpoint(
+            "./v1/swagger.json",
+            "ParkLink User API v1"
+        );
+
+        options.OAuthClientId(
+            builder.Configuration["Swagger:OAuthClientId"]);
+
         options.OAuthUsePkce();
-    });
-}
-else
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint(builder.Configuration["AppSettings:Folder"] + "/swagger/v1/swagger.json", "User System API");
-        options.OAuthClientId(builder.Configuration["ParkinLinkUserSettings:ApiName"]);
-        options.OAuthRealm(" ");
-        options.OAuthAppName(" ");
-        options.OAuthUsePkce();
+
+        options.DisplayRequestDuration();
     });
 }
 

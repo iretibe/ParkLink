@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ParkLink.Payment.Messages;
 using ParkLink.Payment.Services;
 
 namespace ParkLink.Payment.Controllers
 {
-    public sealed class PaymentWebhookController : BaseController
+    public sealed class PaystackWebhookController : BaseController
     {
         private readonly IPaymentService _paymentService;
         private readonly IPaystackWebhookValidator _validator;
-        private readonly ILogger<PaymentWebhookController> _logger;
+        private readonly ILogger<PaystackWebhookController> _logger;
 
-        public PaymentWebhookController(
+        public PaystackWebhookController(
             IPaymentService paymentService,
             IPaystackWebhookValidator validator,
-            ILogger<PaymentWebhookController> logger)
+            ILogger<PaystackWebhookController> logger)
         {
             _paymentService = paymentService;
             _validator = validator;
@@ -47,7 +46,7 @@ namespace ParkLink.Payment.Controllers
 
             try
             {
-                await _paymentService.ProcessPaystackWebhookAsync(payload, cancellationToken);
+                await _paymentService.ProcessPaystackWebhookAsync(payload, signature ?? string.Empty, cancellationToken);
 
                 return Ok();
             }

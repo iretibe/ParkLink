@@ -104,7 +104,24 @@ namespace ParkLink.Payment.Services
                     providerResult.FailureReason
                 );
 
-                await _context.SaveChangesAsync(cancellationToken);
+                try
+                {
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+                catch (DbUpdateException)
+                {
+                    var existingPayment = await _context.Payments
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => 
+                            x.ReservationId == request.ReservationId, cancellationToken);
+
+                    if (existingPayment != null)
+                    {
+                        return MapToDto(existingPayment);
+                    }
+
+                    throw;
+                }
 
                 await _publishEndpoint.Publish(
                     new PaymentFailedIntegrationEvent(
@@ -544,6 +561,11 @@ namespace ParkLink.Payment.Services
                 return MapToDto(payment);
             }
 
+            //if (payment.Status == PaymentStatus.Completed)
+            //{
+            //    return MapToDto(payment);
+            //}
+
             if (string.IsNullOrWhiteSpace(payment.ProviderReference))
             {
                 throw new InvalidOperationException(
@@ -589,7 +611,8 @@ namespace ParkLink.Payment.Services
                         payment.PaymentReference,
                         payment.FailureReason,
                         payment.FailedAtUtc.Value),
-                    cancellationToken);
+                    cancellationToken
+                );
 
                 return MapToDto(payment);
             }
@@ -613,7 +636,20 @@ namespace ParkLink.Payment.Services
                 null
             );
 
-            await _context.SaveChangesAsync(cancellationToken);
+            try
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                _context.Entry(payment).State = EntityState.Detached;
+
+                var currentPayment = await _context.Payments
+                    .AsNoTracking()
+                    .FirstAsync(x => x.Id == paymentId, cancellationToken);
+
+                return MapToDto(currentPayment);
+            }
 
             await _publishEndpoint.Publish(
                 new PaymentCompletedIntegrationEvent(
@@ -675,7 +711,7 @@ namespace ParkLink.Payment.Services
             );
         }
 
-        public async Task ProcessPaystackWebhookAsync(string payload, CancellationToken cancellationToken = default)
+        public async Task ProcessPaystackWebhookAsync(string payload, string signature, CancellationToken cancellationToken = default)
         {
             var webhook = JsonSerializer
                 .Deserialize<PaystackWebhookRequest>(payload,

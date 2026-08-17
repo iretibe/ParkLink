@@ -21,20 +21,23 @@ namespace ParkLink.Payment.Services
 
             var secretKey = _configuration["Payment:Paystack:SecretKey"];
 
-            if (string.IsNullOrWhiteSpace(secretKey))
+            if (string.IsNullOrWhiteSpace(secretKey)
+                || string.IsNullOrWhiteSpace(signature))
             {
                 throw new InvalidOperationException(
-                    "Paystack secret key has not been configured.");
+                    "Paystack secret or signature key has not been configured.");
             }
 
             using var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(secretKey));
 
-            var hash = Convert.ToHexString(
-                hmac.ComputeHash(Encoding.UTF8.GetBytes(payload))).ToLowerInvariant();
+            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(payload));
+
+            var calculatedSignature = Convert.ToHexString(hash);
 
             return CryptographicOperations.FixedTimeEquals(
-                Encoding.UTF8.GetBytes(hash),
-                Encoding.UTF8.GetBytes(signature.ToLowerInvariant()));
+                Encoding.UTF8.GetBytes(calculatedSignature),
+                Encoding.UTF8.GetBytes(signature)
+            );
         }
     }
 }
