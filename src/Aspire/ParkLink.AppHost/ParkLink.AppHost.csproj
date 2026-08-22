@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Clients\ParkLink.Web\ParkLink.Web.csproj" />
     <ProjectReference Include="..\..\Gateway\ParkLink.ApiGateway\ParkLink.ApiGateway.csproj" />
+    <ProjectReference Include="..\..\Services\ParkLink.Gate\ParkLink.Gate.csproj" />
     <ProjectReference Include="..\..\Services\ParkLink.Identity\ParkLink.Identity.csproj" />
     <ProjectReference Include="..\..\Services\ParkLink.Notification\ParkLink.Notification.csproj" />
     <ProjectReference Include="..\..\Services\ParkLink.Parking\ParkLink.Parking.csproj" />

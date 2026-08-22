@@ -15,6 +15,7 @@ var reservationDb = sqlServer.AddDatabase("parklink-reservationdb");
 var paymentDb = sqlServer.AddDatabase("parklink-paymentdb");
 var notificationDb = sqlServer.AddDatabase("parklink-notificationdb");
 var vehicleDb = sqlServer.AddDatabase("parklink-vehicledb");
+var gateDb = sqlServer.AddDatabase("parklink-gatedb");
 
 // Redis
 var redis = builder.AddRedis("redis")
@@ -160,6 +161,29 @@ var vehicleService = builder
     .WithExternalHttpEndpoints()
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development");
 
+var gateService = builder
+    .AddProject<Projects.ParkLink_Gate>("parking-gate")
+    .WithUrl("https://parking-gate-api-parklink.127.0.0.1.nip.io:7255")
+    .WithReference(gateDb)
+    .WithReference(identityService)
+    .WithReference(vehicleService)
+    .WithReference(reservationService)
+    .WithReference(paymentService)
+    .WithReference(redis)
+    .WithReference(rabbitMq)
+    .WithReference(seq)
+    .WaitFor(gateDb)
+    .WaitFor(identityService)
+    .WaitFor(vehicleService)
+    .WaitFor(reservationService)
+    .WaitFor(paymentService)
+    .WaitFor(redis)
+    .WaitFor(rabbitMq)
+    .WaitFor(seq)
+    .WithHttpHealthCheck("/health")
+    .WithExternalHttpEndpoints()
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development");
+
 var gatewayService = builder
     .AddProject<Projects.ParkLink_ApiGateway>("parking-gateway")
     .WithReference(userService)
@@ -168,6 +192,7 @@ var gatewayService = builder
     .WithReference(paymentService)
     .WithReference(vehicleService)
     .WithReference(notificationService)
+    .WithReference(gateService)
     .WithReference(redis)
     .WaitFor(userService)
     .WaitFor(parkingService)
@@ -175,6 +200,7 @@ var gatewayService = builder
     .WaitFor(paymentService)
     .WaitFor(vehicleService)
     .WaitFor(notificationService)
+    .WaitFor(gateService)
     .WaitFor(redis)
     .WithHttpHealthCheck("/health");
 
