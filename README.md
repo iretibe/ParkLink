@@ -57,24 +57,24 @@ The system uses synchronous HTTP communication where immediate responses are req
 
 ## Technology Stack
 
-### Area	                                       Technology
-Runtime	                                         .NET 10
-Language	                                       C#
-Application Framework	                           ASP.NET Core
-Orchestration	                                   .NET Aspire
-ORM	                                             Entity Framework Core
-Database	                                       SQL Server
-Messaging	                                       RabbitMQ
-Message Bus	                                     MassTransit
-Caching	                                         Redis
-API	                                             REST / OpenAPI
-Logging	                                         Serilog
-Observability                                    OpenTelemetry
-Containers	                                     Docker
-CI/CD	                                           GitHub Actions
-Authentication	                                 ASP.NET Identity / Duende
-API Documentation	                               Swagger / OpenAPI
-
+| Area | Technology |
+|---|---|
+| **Runtime** | .NET 10 |
+| **Language** | C# |
+| **Application Framework** | ASP.NET Core |
+| **Orchestration** | .NET Aspire |
+| **ORM** | Entity Framework Core |
+| **Database** | SQL Server |
+| **Messaging** | RabbitMQ |
+| **Message Bus** | MassTransit |
+| **Caching** | Redis |
+| **API** | REST / OpenAPI |
+| **Logging** | Serilog |
+| **Observability** | OpenTelemetry |
+| **Containers** | Docker |
+| **CI/CD** | GitHub Actions |
+| **Authentication** | ASP.NET Identity / Duende |
+| **API Documentation** | Swagger / OpenAPI |
 ## Project Status
 
 Identity       ✅
