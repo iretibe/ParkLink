@@ -75,6 +75,140 @@ The system uses synchronous HTTP communication where immediate responses are req
 | **CI/CD** | GitHub Actions |
 | **Authentication** | ASP.NET Identity / Duende |
 | **API Documentation** | Swagger / OpenAPI |
+
+
+# Core Services
+
+## Identity Service
+
+Responsible for:
+
+- User authentication and identity management
+- Authentication and authorization
+- OAuth 2.0 / OpenID Connect
+- Access token issuance and validation
+- Role- and claims-based authorization
+- External identity providers
+
+**Status:** ✅ Implemented
+
+---
+
+## Users Service
+
+Responsible for:
+
+- User profile management
+- User account information
+- User lifecycle management
+- User role and permission management
+- User preferences and profile settings
+- User-related business operations
+- Integration with Identity and other platform services
+
+**Status:** ✅ Implemented
+
+---
+
+## Vehicle Service
+
+Responsible for:
+
+- Vehicle registration and management
+- Vehicle ownership and user association
+- Vehicle profile and identification data
+- Vehicle type and classification
+- Vehicle-related business rules
+- Vehicle lifecycle management
+
+**Status:** ✅ Implemented
+
+---
+
+## Parking Service
+
+Responsible for:
+
+- Parking facility management
+- Parking area and zone management
+- Parking space management
+- Parking space availability
+- Parking space status and lifecycle
+- Parking inventory management
+- Parking-related business rules
+
+**Status:** ✅ Implemented
+
+---
+
+## Reservation Service
+
+Responsible for:
+
+- Parking reservation creation
+- Reservation holds
+- Reservation lifecycle management
+- Reservation status management
+- Parking availability validation
+- Reservation-related business rules
+- Integration with payment workflows
+- Integration with notification workflows
+
+**Status:** 🚧 In Progress
+
+---
+
+## Payment Service
+
+Responsible for:
+
+- Payment initiation
+- Payment transaction management
+- Payment status management
+- Payment lifecycle management
+- Payment confirmation and failure handling
+- Payment-related integration events
+- External payment provider integration
+- Payment reconciliation
+
+**Status:** 🚧 In Progress
+
+---
+
+## Notification Service
+
+Responsible for:
+
+- Event-driven notification processing
+- User notification management
+- Email notifications
+- SMS notifications
+- Push notifications
+- Notification templates
+- Notification delivery status
+- Integration with external notification providers
+
+**Status:** 🚧 In Progress
+
+---
+
+## Gate Service
+
+Responsible for:
+
+- Parking gate management
+- Gate access control
+- Entry and exit processing
+- Vehicle access validation
+- Reservation-based access validation
+- Gate access events
+- RFID integration
+- License plate recognition / OCR
+- Real-time gate status
+- Integration with parking and reservation services
+
+**Status:** 🚧 In Progress
+
 ## Project Status
 
 Identity       ✅
