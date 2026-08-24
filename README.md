@@ -107,7 +107,7 @@ Responsible for:
 - Integration with Identity and other platform services
 
 **Status:** ✅ Implemented
-
+> What business information does the platform know about you?
 ---
 
 ## Vehicle Service
@@ -208,6 +208,37 @@ Responsible for:
 - Integration with parking and reservation services
 
 **Status:** 🚧 In Progress
+
+# Distributed-System Engineering
+
+ParkLink deliberately implements several patterns used in production distributed systems.
+
+## Transactional Outbox
+
+Business changes and integration events are persisted within the same database transaction.
+
+HTTP Request
+     │
+     ▼
+Domain Change
+     │
+     ├──────────────► SQL Transaction
+     │                       │
+     │                       ├── Entity
+     │                       │
+     │                       └── Outbox Message
+     │
+     ▼
+Transaction Commit
+     │
+     ▼
+MassTransit Outbox
+     │
+     ▼
+RabbitMQ
+
+This prevents a common distributed-system failure where the database transaction succeeds but event publication fails.
+
 
 ## Project Status
 
