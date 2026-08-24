@@ -217,6 +217,7 @@ ParkLink deliberately implements several patterns used in production distributed
 
 Business changes and integration events are persisted within the same database transaction.
 
+```text
 HTTP Request
      │
      ▼
@@ -236,7 +237,7 @@ MassTransit Outbox
      │
      ▼
 RabbitMQ
-
+```
 This prevents a common distributed-system failure where the database transaction succeeds but event publication fails.
 
 
