@@ -470,3 +470,94 @@ Validation of architectural boundaries and dependency rules.
 - [ ] Real-Time Occupancy
 - [ ] Mobile Application
 
+# Engineering Challenges
+
+Some of the key engineering problems explored by ParkLink include:
+
+## Distributed consistency
+
+How can multiple services maintain consistent business state without relying on distributed database transactions?
+
+## Message reliability
+
+How can integration events survive service failures and message redelivery?
+
+## Reservation concurrency
+
+How can the system prevent two users from successfully reserving the same parking space?
+
+## Service isolation
+
+How can each service evolve independently while still participating in business workflows?
+
+## Observability
+
+How can a request be traced across multiple services and asynchronous messages?
+
+## Authentication
+
+How should users, administrators and internal services authenticate securely?
+
+# Future Architecture
+
+The long-term platform is intended to support:
+
+```test
+                    ParkLink Platform
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+          ▼                ▼                ▼
+       Drivers         Operators         Admins
+          │                │                │
+          └────────────────┼────────────────┘
+                           │
+                     ParkLink APIs
+                           │
+       ┌───────────────────┼───────────────────┐
+       │                   │                   │
+       ▼                   ▼                   ▼
+   Parking             Reservation          Payment
+       │                   │                   │
+       └───────────────────┼───────────────────┘
+                           │
+                     Event Platform
+                           │
+          ┌────────────────┼────────────────┐
+          ▼                ▼                ▼
+        IoT             Gates          Notifications
+```
+
+# Learning & Engineering Focus
+
+ParkLink is also a practical exploration of:
+
+- Cloud-native .NET
+- Distributed systems
+- Event-driven architecture
+- Microservices
+- Domain-driven design
+- Reliable messaging
+- Observability
+- API security
+- Containerized applications
+- Infrastructure automation
+- Production-oriented software engineering
+
+# License
+
+Copyright © 2026 Somad Yessoufou. All rights reserved.
+
+This project is proprietary software. The source code is publicly available
+for portfolio and educational review only. Commercial use, redistribution,
+modification, or reproduction requires prior written permission.
+
+# Author
+
+## Somad Yessoufou
+
+Senior Backend / Software Engineer
+
+C# • .NET • Distributed Systems • Cloud • APIs • Messaging • AI
+
+GitHub: https://github.com/iretibe
