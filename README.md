@@ -301,6 +301,7 @@ The observability strategy covers:
 - Dependency visibility
 - Correlation
 - Structured logging
+
 Serilog is used for structured application logging.
 
 ## Reliability
@@ -316,8 +317,24 @@ The platform incorporates several reliability mechanisms:
 - Health checks
 - Correlation IDs
 - Distributed tracing
+
 The goal is to make failures observable and recoverable rather than allowing them to silently propagate through the system.
 
+## Security
+
+Security is based on modern authentication and authorization patterns.
+
+Current/planned capabilities include:
+
+- ASP.NET Core Identity
+- OAuth 2.0
+- OpenID Connect
+- JWT bearer authentication
+- Role-based authorization
+- Claims-based authorization
+- Service-to-service authentication
+
+No production credentials, secrets or private keys should be committed to the repository.
 
 ## Project Status
 
