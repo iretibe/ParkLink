@@ -2,9 +2,11 @@
 
 ## Cloud-Native Smart Parking Platform
 
-ParkLink is a distributed, event-driven smart parking platform built with modern .NET technologies and orchestrated using .NET Aspire.
+ParkLink is a cloud-native, distributed and event-driven smart parking platform built with modern .NET technologies and orchestrated using .NET Aspire.
 
-The project demonstrates production-oriented patterns for building observable, reliable and scalable distributed systems.
+The platform is designed to demonstrate production-oriented approaches to building reliable, observable and scalable distributed systems, including service isolation, asynchronous messaging, transactional outbox processing, idempotent message consumption, optimistic concurrency, distributed tracing and health monitoring.
+
+> **Project status:** Active development
 
 ### Technology
 
