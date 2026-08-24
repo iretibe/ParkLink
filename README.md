@@ -57,7 +57,7 @@ The system uses synchronous HTTP communication where immediate responses are req
 
 ## Technology Stack
 
-### Area	                                       ### Technology
+### Area	                                       Technology
 Runtime	                                         .NET 10
 Language	                                       C#
 Application Framework	                           ASP.NET Core
