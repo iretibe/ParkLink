@@ -262,11 +262,62 @@ Processed Message Check
 
 ParkLink uses optimistic concurrency to protect data from conflicting updates.
 
-Example:
-
-public byte[] RowVersion { get; set; } = [];
+> Example:
+> public byte[] RowVersion { get; set; } = [];
 
 This is particularly relevant to parking and reservation scenarios where multiple users may attempt to modify the same resource.
+
+## Correlation IDs
+
+Requests are correlated across service boundaries.
+
+```text
+HTTP Request
+     │
+     │ X-Correlation-ID
+     ▼
+Vehicle Service
+     │
+     ▼
+RabbitMQ
+     │
+     ▼
+Notification Service
+     │
+     ▼
+Logs / Traces
+```
+Correlation IDs make it possible to trace a business operation across multiple services.
+
+## Observability
+
+ParkLink uses OpenTelemetry to support distributed observability.
+
+The observability strategy covers:
+
+- Distributed traces
+- Application telemetry
+- Service health
+- Dependency visibility
+- Correlation
+- Structured logging
+Serilog is used for structured application logging.
+
+## Reliability
+
+The platform incorporates several reliability mechanisms:
+
+- Transactional Outbox
+- Message retries
+- Dead-letter handling
+- Idempotent consumers
+- Optimistic concurrency
+- Global exception handling
+- Health checks
+- Correlation IDs
+- Distributed tracing
+The goal is to make failures observable and recoverable rather than allowing them to silently propagate through the system.
+
 
 ## Project Status
 
