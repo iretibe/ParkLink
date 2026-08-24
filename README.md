@@ -425,48 +425,48 @@ Validation of architectural boundaries and dependency rules.
 | Real-time Occupancy | ⏳ |
 | Mobile Application | ⏳ |
 
-# # Roadmap
+# Roadmap
 
 ## Phase 1 — Core Platform
 
-[x] Identity
-[x] Users
-[x] Vehicle
-[x] Parking
+- [x] Identity
+- [x] Users
+- [x] Vehicle
+- [x] Parking
 
 ## Phase 2 — Messaging
 
-[x] RabbitMQ
-[x] MassTransit
-[x] Integration Events
-[x] Transactional Outbox
-[x] Retry Policies
-[x] Dead Letter Handling
+- [x] RabbitMQ
+- [x] MassTransit
+- [x] Integration Events
+- [x] Transactional Outbox
+- [x] Retry Policies
+- [x] Dead-Letter Handling
 
-## Phase 3 — Reliability
+## Phase 3 — Reliability & Observability
 
-[x] Optimistic Concurrency
-[x] Correlation IDs
-[x] Global Exception Handling
-[x] Health Checks
-[x] OpenTelemetry
-[ ] Outbox Monitoring
-[ ] Distributed Idempotency
+- [x] Optimistic Concurrency
+- [x] Correlation IDs
+- [x] Global Exception Handling
+- [x] Health Checks
+- [x] OpenTelemetry
+- [ ] Outbox Monitoring
+- [ ] Distributed Idempotency
 
 ## Phase 4 — Reservation
 
-[x] Reservation domain
-[x] Reservation holds
-[x] Reservation lifecycle
-[ ] Payment integration
-[ ] Advanced availability
+- [x] Reservation Domain
+- [x] Reservation Holds
+- [x] Reservation Lifecycle
+- [ ] Payment Integration
+- [ ] Advanced Availability
 
 ## Phase 5 — Smart Parking
 
-[ ] RFID
-[ ] OCR
-[ ] IoT Gateway
-[ ] Gate Access
-[ ] Real-time occupancy
-[ ] Mobile application
+- [ ] RFID
+- [ ] OCR
+- [ ] IoT Gateway
+- [ ] Gate Access
+- [ ] Real-Time Occupancy
+- [ ] Mobile Application
 
