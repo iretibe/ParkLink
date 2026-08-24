@@ -26,7 +26,7 @@ ParkLink models these capabilities as independently deployable services communic
 
 The project focuses not only on implementing business functionality, but also on the engineering challenges that arise when building distributed systems.
 
-### Architecture
+## Architecture
 
                     ┌─────────────────────┐
                     │   ParkLink Gateway   │
@@ -53,6 +53,27 @@ The project focuses not only on implementing business functionality, but also on
 Each service owns its business logic and persistence boundary.
 
 The system uses synchronous HTTP communication where immediate responses are required and asynchronous messaging for decoupled integration workflows.
+
+
+## Technology Stack
+
+### Area	                                       ### Technology
+Runtime	                                         .NET 10
+Language	                                       C#
+Application Framework	                           ASP.NET Core
+Orchestration	                                   .NET Aspire
+ORM	                                             Entity Framework Core
+Database	                                       SQL Server
+Messaging	                                       RabbitMQ
+Message Bus	                                     MassTransit
+Caching	                                         Redis
+API	                                             REST / OpenAPI
+Logging	                                         Serilog
+Observability                                    OpenTelemetry
+Containers	                                     Docker
+CI/CD	                                           GitHub Actions
+Authentication	                                 ASP.NET Identity / Duende
+API Documentation	                               Swagger / OpenAPI
 
 ## Project Status
 
