@@ -240,6 +240,24 @@ RabbitMQ
 ```
 This prevents a common distributed-system failure where the database transaction succeeds but event publication fails.
 
+## Idempotent Consumers
+
+Consumers are designed to avoid processing the same message more than once.
+
+```text
+RabbitMQ
+    │
+    ▼
+ Consumer
+    │
+    ▼
+Processed Message Check
+    │
+    ├── Already processed ──► Ignore
+    │
+    └── New message ────────► Process
+```
+
 
 ## Project Status
 
