@@ -365,16 +365,65 @@ ParkLink/
     └── deployment
 ```
 
+> Adjust the structure above to exactly match the repository. Do not document folders that don't actually exist.
+
+# Running Locally
+## Prerequisites
+- .NET 10 SDK
+- Docker Desktop
+- Git
+- SQL Server
+- .NET Aspire tooling
+
+### Clone the repository:
+
+```bash
+git clone https://github.com/iretibe/ParkLink.git
+
+cd ParkLink
+```
+
+### Run the Aspire application:
+
+```bash
+dotnet run --project src/ParkLink.AppHost
+```
+
+> Update the command if the actual AppHost project has a different path.
+
+# API Documentation
+
+ParkLink exposes REST APIs documented through OpenAPI/Swagger.
+
+When running locally, the API documentation can be accessed through the development endpoints configured by the individual services.
+
+## Testing
+The project follows a layered testing strategy.
+
+## Unit Tests
+Business logic and application behavior.
+
+## Integration Tests
+Service, database and messaging integration.
+
+## Architecture Tests
+Validation of architectural boundaries and dependency rules.
+
 ## Project Status
 
-Identity       ✅
-Users          ✅
-Vehicle        ✅
-Parking        ✅
-Notification   🚧
-Reservation    🚧
-Payment        ⏳
-IoT Gateway    ⏳
+| Capability | Status |
+|---|:---:|
+| Identity | ✅ |
+| Users | ✅ |
+| Vehicle | ✅ |
+| Parking | ✅ |
+| Notification | 🚧 |
+| Reservation | 🚧 |
+| Payment | ⏳ |
+| IoT Gateway | ⏳ |
+| Gate Access | ⏳ |
+| Real-time Occupancy | ⏳ |
+| Mobile Application | ⏳ |
 
 # # Roadmap
 
