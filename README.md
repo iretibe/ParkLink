@@ -26,22 +26,7 @@ ParkLink models these capabilities as independently deployable services communic
 
 The project focuses not only on implementing business functionality, but also on the engineering challenges that arise when building distributed systems.
 
-### Technology
-
-.NET 10
-.NET Aspire
-ASP.NET Core
-C#
-EF Core
-SQL Server
-RabbitMQ
-MassTransit
-Redis
-OpenTelemetry
-Serilog
-Swagger / OpenAPI
-Docker
-GitHub Actions
+### Architecture
 
                     ┌─────────────────────┐
                     │   ParkLink Gateway   │
@@ -65,60 +50,9 @@ GitHub Actions
                        ▼
                     Payment
 
-## 1. Transactional Outbox
-HTTP Request
-     │
-     ▼
-Domain Change
-     │
-     ├──────────────► SQL Transaction
-     │                    │
-     │                    ├── Entity
-     │                    └── OutboxMessage
-     │
-     ▼
-Transaction Commit
-     │
-     ▼
-MassTransit Outbox
-     │
-     ▼
-RabbitMQ
+Each service owns its business logic and persistence boundary.
 
-## 2. Idempotent consumers
-
-RabbitMQ
-   │
-   ▼
-Consumer
-   │
-   ▼
-Inbox / Processed Message
-   │
-   ├── Already processed → Ignore
-   │
-   └── New message → Process
-
-## 3. Optimistic concurrency
-
-public byte[] RowVersion { get; set; } = [];
-
-## 4. Correlation IDs
-
-HTTP Request
-     │
-     │ X-Correlation-ID
-     ▼
-Vehicle Service
-     │
-     ▼
-RabbitMQ
-     │
-     ▼
-Notification Service
-     │
-     ▼
-Logs
+The system uses synchronous HTTP communication where immediate responses are required and asynchronous messaging for decoupled integration workflows.
 
 ## Project Status
 
