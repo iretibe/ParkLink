@@ -336,6 +336,35 @@ Current/planned capabilities include:
 
 No production credentials, secrets or private keys should be committed to the repository.
 
+## Project Structure
+
+```text
+ParkLink/
+│
+├── src/
+│   ├── ParkLink.Identity
+│   ├── ParkLink.Identity.Api
+│   ├── ParkLink.Users
+│   ├── ParkLink.Vehicle
+│   ├── ParkLink.Parking
+│   ├── ParkLink.Reservation
+│   ├── ParkLink.Payment
+│   ├── ParkLink.Notification
+│   ├── ParkLink.Gate
+│   └── ParkLink.BuildingBlocks
+│
+├── tests/
+│   ├── UnitTests
+│   ├── IntegrationTests
+│   └── ArchitectureTests
+│
+└── docs/
+    ├── architecture
+    ├── events
+    ├── security
+    └── deployment
+```
+
 ## Project Status
 
 Identity       ✅
