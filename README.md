@@ -8,6 +8,24 @@ The platform is designed to demonstrate production-oriented approaches to buildi
 
 > **Project status:** Active development
 
+## Why ParkLink?
+
+Finding and managing parking spaces involves several independent business capabilities:
+
+- Identity and authentication
+- User management
+- Vehicle management
+- Parking inventory
+- Reservations
+- Payments
+- Notifications
+- Gate/access control
+- Real-time occupancy
+
+ParkLink models these capabilities as independently deployable services communicating through synchronous APIs and asynchronous integration events.
+
+The project focuses not only on implementing business functionality, but also on the engineering challenges that arise when building distributed systems.
+
 ### Technology
 
 .NET 10
