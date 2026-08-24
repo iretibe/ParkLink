@@ -258,6 +258,15 @@ Processed Message Check
     └── New message ────────► Process
 ```
 
+## Optimistic Concurrency
+
+ParkLink uses optimistic concurrency to protect data from conflicting updates.
+
+Example:
+
+public byte[] RowVersion { get; set; } = [];
+
+This is particularly relevant to parking and reservation scenarios where multiple users may attempt to modify the same resource.
 
 ## Project Status
 
