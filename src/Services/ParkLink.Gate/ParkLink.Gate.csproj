@@ -8,8 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Events\" />
-    <Folder Include="Consumers\" />
+    <Folder Include="Messaging\Consumers\Gate\" />
   </ItemGroup>
 
 	<ItemGroup>

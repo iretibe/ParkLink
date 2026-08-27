@@ -1,4 +1,5 @@
-﻿using ParkLink.Gate.Hardware;
+﻿using ParkLink.Gate.Events;
+using ParkLink.Gate.Hardware;
 using ParkLink.Gate.Services.Implementations;
 using ParkLink.Gate.Services.Interfaces;
 
@@ -14,6 +15,8 @@ namespace ParkLink.Gate.Extensions
             services.AddScoped<IGateDeviceCommandService, GateDeviceCommandService>();
 
             services.AddScoped<IGateHardwareClient, SimulatedGateHardwareClient>();
+
+            services.AddScoped<IGateEventPublisher, GateEventPublisher>();
 
             return services;
         }

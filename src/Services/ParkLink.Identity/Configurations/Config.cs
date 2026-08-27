@@ -5,6 +5,8 @@ namespace ParkLink.Identity.Configurations
 {
     public static class Config
     {
+        private const string ApiSecret = "P@rY&l**NkX";
+
         public static IEnumerable<IdentityResource> IdentityResources =>
             new IdentityResource[]
             {
@@ -20,48 +22,83 @@ namespace ParkLink.Identity.Configurations
         public static IEnumerable<ApiResource> ApiResources =>
         new ApiResource[]
         {
-                new ApiResource("notificationapi", "Notification System API")
+            new ApiResource("notificationapi", "Notification System API")
+            {
+                ApiSecrets =
                 {
-                    ApiSecrets =
-                    {
-                        new Secret("P@rY&l**NkX".Sha256())
-                    }
+                    new Secret(ApiSecret.Sha256())
                 },
-                new ApiResource("parkingapi", "Parking System API")
+                Scopes =
                 {
-                    ApiSecrets =
-                    {
-                        new Secret("P@rY&l**NkX".Sha256())
-                    }
-                },
-                new ApiResource("payment", "Payment System API")
-                {
-                    ApiSecrets =
-                    {
-                        new Secret("P@rY&l**NkX".Sha256())
-                    }
-                },
-                new ApiResource("reservationapi", "Reservation System API")
-                {
-                    ApiSecrets =
-                    {
-                        new Secret("P@rY&l**NkX".Sha256())
-                    }
-                },
-                new ApiResource("userapi", "User System API")
-                {
-                    ApiSecrets =
-                    {
-                        new Secret("P@rY&l**NkX".Sha256())
-                    }
-                },
-                new ApiResource("vehicleapi", "Vehicle System API")
-                {
-                    ApiSecrets =
-                    {
-                        new Secret("P@rY&l**NkX".Sha256())
-                    }
+                    "notificationapi"
                 }
+            },
+            new ApiResource("parkingapi", "Parking System API")
+            {
+                ApiSecrets =
+                {
+                    new Secret(ApiSecret.Sha256())
+                },
+                Scopes =
+                {
+                    "parkingapi"
+                }
+            },
+            new ApiResource("payment", "Payment System API")
+            {
+                ApiSecrets =
+                {
+                    new Secret(ApiSecret.Sha256())
+                },
+                Scopes =
+                {
+                    "paymentapi"
+                }
+            },
+            new ApiResource("reservationapi", "Reservation System API")
+            {
+                ApiSecrets =
+                {
+                    new Secret(ApiSecret.Sha256())
+                },
+                Scopes =
+                {
+                    "reservationapi"
+                }
+            },
+            new ApiResource("userapi", "User System API")
+            {
+                ApiSecrets =
+                {
+                    new Secret(ApiSecret.Sha256())
+                },
+                Scopes =
+                {
+                    "userapi"
+                }
+            },
+            new ApiResource("vehicleapi", "Vehicle System API")
+            {
+                ApiSecrets =
+                {
+                    new Secret(ApiSecret.Sha256())
+                },
+                Scopes =
+                {
+                    "vehicleapi"
+                }
+            },
+            new ApiResource("gateapi", "Gate Management API")
+            {
+                ApiSecrets =
+                {
+                    new Secret(ApiSecret.Sha256())
+                },
+                Scopes =
+                {
+                    "gateapi"
+                }
+            }
         };
 
         public static IEnumerable<ApiScope> ApiScopes =>
@@ -72,7 +109,8 @@ namespace ParkLink.Identity.Configurations
                 new ApiScope("paymentapi", "Payment System API"),
                 new ApiScope("reservationapi", "Reservation System API"),
                 new ApiScope("userapi", "User System API"),
-                new ApiScope("vehicleapi", "Vehicle System API")
+                new ApiScope("vehicleapi", "Vehicle System API"),
+                new ApiScope("gateapi", "Gate Management API")
         };
 
         public static IEnumerable<Client> Clients(IConfiguration configuration) =>
@@ -314,6 +352,43 @@ namespace ParkLink.Identity.Configurations
                 },
                 new Client
                 {
+                    ClientId = "gate.api.code",
+                    ClientName = "Gate_Api_Code",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequirePkce = true,
+                    RequireClientSecret = false,
+                    RequireConsent = false,
+                    AllowRememberConsent = true,
+                    AllowAccessTokensViaBrowser = true,
+                    AllowOfflineAccess = true,
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.Address,
+                        "gateapi"
+                    },
+                    AllowedCorsOrigins =
+                    {
+                        configuration["ClientUrls:GateServiceUrl"]!
+                    },
+                    RedirectUris =
+                    {
+                        $"{configuration["ClientUrls:GateServiceUrl"]}/swagger/oauth2-redirect.html"
+                    },
+                    PostLogoutRedirectUris =
+                    {
+                        $"{configuration["ClientUrls:GateServiceUrl"]}/signout-callback-oidc",
+                        $"{configuration["ClientUrls:GateServiceUrl"]}/swagger/signout-callback-oidc"
+                    },
+                    AccessTokenLifetime = 3600,
+                    IdentityTokenLifetime = 300,
+                    AbsoluteRefreshTokenLifetime = 2592000,
+                    SlidingRefreshTokenLifetime = 1296000
+                },
+                new Client
+                {
                     ClientId = "admin.web.code",
                     ClientName = "Admin_Web_Code",
                     AllowedGrantTypes = GrantTypes.Code,
@@ -335,7 +410,8 @@ namespace ParkLink.Identity.Configurations
                         "paymentapi",
                         "reservationapi",
                         "userapi",
-                        "vehicleapi"
+                        "vehicleapi",
+                        "gateapi"
                     },
                     AllowedCorsOrigins = new []
                     {
@@ -379,7 +455,8 @@ namespace ParkLink.Identity.Configurations
                         "paymentapi",
                         "reservationapi",
                         "userapi",
-                        "vehicleapi"
+                        "vehicleapi",
+                        "gateapi"
                     },
                     AllowedCorsOrigins = new []
                     {
@@ -397,6 +474,27 @@ namespace ParkLink.Identity.Configurations
 				    IdentityTokenLifetime = 300, // 5 minutes
 				    AbsoluteRefreshTokenLifetime = 2592000, // 30 days
 				    SlidingRefreshTokenLifetime = 1296000, // 15 days
+                },
+                // GATE SERVICE - MACHINE TO MACHINE
+                // ParkLink.Gate uses this client to obtain an
+                // access token through Client Credentials.
+                new Client
+                {
+                    ClientId = "ParkLinkGateService",
+                    ClientName = "ParkLink Gate Service",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret(ApiSecret.Sha256())
+                    },
+                    RequireClientSecret = true,
+                    AllowedScopes =
+                    {
+                        "vehicleapi",
+                        "reservationapi",
+                        "paymentapi"
+                    },
+                    AccessTokenLifetime = 3600
                 }
             };
     }

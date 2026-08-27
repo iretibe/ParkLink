@@ -6,35 +6,37 @@ using ParkLink.ServiceDefaults.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.AddServiceDefaults();
+
 builder.Services.AddProblemDetails();
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-builder.Services.AddDbContext<GateContext>(
-    options =>
-    {
-        options.UseSqlServer(
-            builder.Configuration.GetConnectionString("parklink-gatedb"),
-            sql =>
-            {
-                sql.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
-            }
-        );
-    }
-);
+builder.Services.AddDbContext<GateContext>(options =>
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("parklink-gatedb"),
+        sql =>
+        {
+            sql.EnableRetryOnFailure(
+                5,
+                TimeSpan.FromSeconds(30),
+                null);
+        });
+});
 
 builder.Services.AddControllers();
 
 builder.Services.AddGateApplication();
 
-builder.Services.AddGateHttpClients(builder.Configuration);
+builder.Services.AddServiceDiscovery();
 
-builder.Services.AddGateMessaging(builder.Configuration);
+builder.Services.AddGateHttpClients();
+
+builder.Services.AddGateMessaging();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (builder.Configuration.GetValue<bool>("Swagger:Enabled"))
 {
     app.UseSwagger();
@@ -42,12 +44,10 @@ if (builder.Configuration.GetValue<bool>("Swagger:Enabled"))
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint(
-            "./v1/swagger.json",
-            "ParkLink Gate API v1"
-        );
+            "./v1/swagger.json", 
+            "ParkLink Gate API v1");
 
-        options.OAuthClientId(
-            builder.Configuration["Swagger:OAuthClientId"]);
+        options.OAuthClientId(builder.Configuration["Swagger:OAuthClientId"]);
 
         options.OAuthUsePkce();
 
@@ -62,6 +62,7 @@ app.UseExceptionHandler();
 app.UseParkLinkCorrelationId();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

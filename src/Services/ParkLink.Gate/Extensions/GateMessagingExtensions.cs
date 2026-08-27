@@ -1,15 +1,36 @@
 ﻿using MassTransit;
 using ParkLink.Gate.Data;
+using ParkLink.Gate.Events;
+using ParkLink.Gate.Messaging.Consumers.Payment;
+using ParkLink.Gate.Messaging.Consumers.Reservation;
+using ParkLink.Gate.Messaging.Consumers.Vehicle;
 
 namespace ParkLink.Gate.Extensions
 {
     public static class GateMessagingExtensions
     {
         public static IServiceCollection AddGateMessaging(
-            this IServiceCollection services, IConfiguration configuration)
+            this IServiceCollection services)
         {
             services.AddMassTransit(x =>
             {
+                // Vehicle consumers
+                x.AddConsumer<VehicleCreatedConsumer>();
+                x.AddConsumer<VehicleUpdatedConsumer>();
+                x.AddConsumer<VehicleSuspendedConsumer>();
+                x.AddConsumer<VehicleDeletedConsumer>();
+
+                // Reservation consumers
+                x.AddConsumer<ReservationCreatedConsumer>();
+                x.AddConsumer<ReservationCancelledConsumer>();
+                x.AddConsumer<ReservationExpiredConsumer>();
+
+                // Payment consumers
+                x.AddConsumer<PaymentCompletedConsumer>();
+                x.AddConsumer<PaymentFailedConsumer>();
+                x.AddConsumer<PaymentRefundedConsumer>();
+
+                // Transactional Outbox
                 x.AddEntityFrameworkOutbox<GateContext>(o =>
                 {
                     o.UseSqlServer();
@@ -20,15 +41,14 @@ namespace ParkLink.Gate.Extensions
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    var host = configuration["RabbitMQ:Host"] ?? "localhost";
-                    var username = configuration["RabbitMQ:Username"] ?? "guest";
-                    var password = configuration["RabbitMQ:Password"] ?? "guest";
-
-                    cfg.Host(host, "/", h =>
-                    {
-                        h.Username(username);
-                        h.Password(password);
-                    });
+                    cfg.Host(
+                        "rabbitmq",
+                        "/",
+                        h =>
+                        {
+                            h.Username("guest");
+                            h.Password("guest");
+                        });
 
                     cfg.ConfigureEndpoints(context);
                 });
