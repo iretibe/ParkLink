@@ -1,0 +1,112 @@
+﻿<MudAppBar Elevation="0"
+           Class="bg-white border-bottom px-4">
+
+    <!-- Search -->
+    <MudTextField T="string"
+                  Placeholder="Search anything..."
+                  Variant="Variant.Outlined"
+                  Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Filled.Search"
+                  Dense="true"
+                  Margin="Margin.Dense"
+                  Style="width:320px;"
+                  Class="rounded-lg" />
+
+    <MudSpacer />
+
+    <!-- Language -->
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Size="Size.Small"
+               Class="mx-1 rounded-lg">
+        EN
+    </MudButton>
+
+    <MudButton Variant="Variant.Text"
+               Color="Color.Dark"
+               Size="Size.Small"
+               Class="mx-1">
+        FR
+    </MudButton>
+
+    <!-- Notifications -->
+    <MudBadge Dot="true"
+              Color="Color.Error"
+              Overlap="true"
+              Class="mx-3">
+
+        <MudIconButton Icon="@Icons.Material.Filled.Notifications"
+                       Color="Color.Default"
+                       OnClick="OpenNotifications" />
+
+    </MudBadge>
+
+    <!-- User -->
+    <MudMenu AnchorOrigin="Origin.BottomRight"
+             TransformOrigin="Origin.TopRight">
+
+        <ActivatorContent>
+
+            <div class="d-flex align-center gap-2 ml-2 cursor-pointer">
+
+                <MudAvatar Size="Size.Medium">
+                    JM
+                </MudAvatar>
+
+                <div>
+
+                    <MudText Typo="Typo.body2"
+                             Class="font-weight-bold">
+                        John Mensah
+                    </MudText>
+
+                    <MudText Typo="Typo.caption"
+                             Class="mud-text-secondary">
+                        Administrator
+                    </MudText>
+
+                </div>
+
+                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown"
+                         Size="Size.Small" />
+
+            </div>
+
+        </ActivatorContent>
+
+        <ChildContent>
+
+            <MudMenuItem Icon="@Icons.Material.Filled.Person">
+                My Profile
+            </MudMenuItem>
+
+            <MudMenuItem Icon="@Icons.Material.Filled.Settings">
+                Settings
+            </MudMenuItem>
+
+            <MudDivider />
+
+            <MudMenuItem Icon="@Icons.Material.Filled.Logout"
+                         OnClick="Logout">
+                Logout
+            </MudMenuItem>
+
+        </ChildContent>
+
+    </MudMenu>
+
+</MudAppBar>
+
+@code {
+
+    private void OpenNotifications()
+    {
+        // Navigate to notification center later.
+    }
+
+    private async Task Logout()
+    {
+        // Connect to the shared authentication service.
+        await Task.CompletedTask;
+    }
+}

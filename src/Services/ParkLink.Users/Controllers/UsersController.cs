@@ -88,7 +88,7 @@ namespace ParkLink.Users.Controllers
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserDto>> UpdateUser(string id, 
+        public async Task<ActionResult<UserDto>> UpdateUser(string id,
             [FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
         {
             try
@@ -301,7 +301,7 @@ namespace ParkLink.Users.Controllers
         [HttpDelete("{userId}/documents/{documentId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteUserDocument(string userId, 
+        public async Task<IActionResult> DeleteUserDocument(string userId,
             Guid documentId, CancellationToken cancellationToken)
         {
             try

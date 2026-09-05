@@ -1,0 +1,70 @@
+﻿<MudCard Elevation="1" Class="pa-4 rounded-xl h-100">
+
+    <div class="d-flex align-center justify-space-between mb-3">
+
+        <MudText Typo="Typo.h6"
+                 Class="font-weight-bold">
+            Revenue Overview
+        </MudText>
+
+        <MudSelect T="string"
+                   @bind-Value="RevenuePeriod"
+                   Variant="Variant.Outlined"
+                   Dense="true"
+                   Margin="Margin.Dense"
+                   Style="width:130px;">
+
+            <MudSelectItem Value="@("This Week")">
+                This Week
+            </MudSelectItem>
+
+            <MudSelectItem Value="@("This Month")">
+                This Month
+            </MudSelectItem>
+
+        </MudSelect>
+
+    </div>
+
+    <MudChart ChartType="ChartType.Line"
+              ChartSeries="@RevenueSeries"
+              XAxisLabels="@XAxisLabels"
+              Width="100%"
+              Height="230px" />
+
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public string RevenuePeriod { get; set; } = "This Week";
+
+    private readonly string[] XAxisLabels =
+    {
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+    };
+
+    private readonly List<ChartSeries<double>> RevenueSeries = new()
+    {
+        new ChartSeries<double>
+        {
+            Name = "Revenue (GH₵)",
+            Data = new double[]
+            {
+                2200,
+                3500,
+                2800,
+                4100,
+                6340,
+                5200,
+                7100
+            }
+        }
+    };
+}

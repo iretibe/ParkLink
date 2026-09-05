@@ -1,6 +1,5 @@
 ﻿using MassTransit;
 using ParkLink.Gate.Data;
-using ParkLink.Gate.Events;
 using ParkLink.Gate.Messaging.Consumers.Payment;
 using ParkLink.Gate.Messaging.Consumers.Reservation;
 using ParkLink.Gate.Messaging.Consumers.Vehicle;
@@ -22,8 +21,13 @@ namespace ParkLink.Gate.Extensions
 
                 // Reservation consumers
                 x.AddConsumer<ReservationCreatedConsumer>();
+                x.AddConsumer<ReservationConfirmedConsumer>();
+                x.AddConsumer<ReservationActivatedConsumer>();
                 x.AddConsumer<ReservationCancelledConsumer>();
+                x.AddConsumer<ReservationCompletedConsumer>();
                 x.AddConsumer<ReservationExpiredConsumer>();
+                x.AddConsumer<ReservationExtendedConsumer>();
+                x.AddConsumer<ReservationNoShowConsumer>();
 
                 // Payment consumers
                 x.AddConsumer<PaymentCompletedConsumer>();

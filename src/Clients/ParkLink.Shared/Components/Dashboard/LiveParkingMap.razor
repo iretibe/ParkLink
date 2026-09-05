@@ -1,0 +1,87 @@
+﻿@using ParkLink.Shared.Models.Dashboard
+
+<MudCard Elevation="1" Class="pa-4 rounded-xl h-100">
+
+    <div class="d-flex align-center justify-space-between mb-3">
+
+        <div class="d-flex align-center gap-2">
+
+            <MudText Typo="Typo.h6"
+                     Class="font-weight-bold">
+                Live Parking Map
+            </MudText>
+
+            <MudChip T="string"
+                     Color="Color.Success"
+                     Size="Size.Small"
+                     Variant="Variant.Text">
+                ● Live
+            </MudChip>
+
+        </div>
+
+        <MudSelect T="string"
+                   @bind-Value="SelectedLocation"
+                   Variant="Variant.Outlined"
+                   Dense="true"
+                   Margin="Margin.Dense"
+                   Style="width:200px;">
+
+            <MudSelectItem Value="@("Airport City Car Park")">
+                Airport City Car Park
+            </MudSelectItem>
+
+        </MudSelect>
+
+    </div>
+
+    <div class="parking-map-container pa-4 rounded-lg grey-background mb-3">
+
+        @foreach (var rowGroup in ParkingSlots.GroupBy(x => x.Row))
+        {
+            <div class="d-flex align-center gap-2 mb-2">
+
+                <div class="row-label font-weight-bold text-center">
+                    @rowGroup.Key
+                </div>
+
+                <div class="d-flex gap-1 flex-wrap flex-grow-1">
+                    @foreach (var slot in rowGroup)
+                    {
+                        <div class="slot-box @GetSlotClass(slot.Status)">
+                            @slot.Number.ToString("00")
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="d-flex align-center justify-center gap-6 mt-2">
+        <Legend ColorClass="bg-success" Text="Available" />
+        <Legend ColorClass="bg-error" Text="Occupied" />
+        <Legend ColorClass="bg-warning" Text="Reserved" />
+        <Legend ColorClass="bg-maintenance" Text="Maintenance" />
+    </div>
+
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public List<ParkingSlotModel> ParkingSlots { get; set; } = [];
+
+    [Parameter]
+    public string SelectedLocation { get; set; } = string.Empty;
+
+    private static string GetSlotClass(string status) =>
+        status switch
+        {
+            "Available" => "slot-available",
+            "Occupied" => "slot-occupied",
+            "Reserved" => "slot-reserved",
+            "Maintenance" => "slot-maintenance",
+            _ => "slot-available"
+        };
+
+}

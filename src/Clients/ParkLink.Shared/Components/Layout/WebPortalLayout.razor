@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="@ParkLink.Shared.Theme.ParkLinkTheme.Default" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+
+    <WebSidebar />
+
+    <MudMainContent Class="mud-background-grey">
+
+        <TopBar />
+
+        <div class="pa-4">
+            @Body
+        </div>
+
+    </MudMainContent>
+
+</MudLayout>

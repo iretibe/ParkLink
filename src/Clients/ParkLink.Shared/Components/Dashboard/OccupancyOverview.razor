@@ -1,0 +1,93 @@
+﻿<MudCard Elevation="1" Class="pa-4 rounded-xl h-100">
+
+    <MudText Typo="Typo.h6" Class="font-weight-bold mb-3">
+        Occupancy Overview
+    </MudText>
+
+    <div class="d-flex flex-column align-center justify-center my-4">
+
+        <MudChart T="double" ChartType="ChartType.Donut"
+                  Width="180px"
+                  Height="180px"
+                  InputData="@DonutData"
+                  InputLabels="@DonutLabels">
+
+            <CustomGraphics>
+
+                <text x="50%"
+                      y="45%"
+                      dominant-baseline="middle"
+                      text-anchor="middle"
+                      class="donut-center-text font-weight-bold"
+                      font-size="22px">
+                    73%
+                </text>
+
+                <text x="50%"
+                      y="58%"
+                      dominant-baseline="middle"
+                      text-anchor="middle"
+                      class="mud-text-secondary"
+                      font-size="11px">
+                    Occupied
+                </text>
+            </CustomGraphics>
+        </MudChart>
+
+    </div>
+
+    <div class="d-flex flex-column gap-2 mt-4">
+
+        <div class="d-flex justify-space-between">
+            <span>
+                <span class="legend-dot bg-success"></span>
+                Available
+            </span>
+            <span>342 (27%)</span>
+        </div>
+
+        <div class="d-flex justify-space-between">
+            <span>
+                <span class="legend-dot bg-error"></span>
+                Occupied
+            </span>
+            <span>730 (58%)</span>
+        </div>
+
+        <div class="d-flex justify-space-between">
+            <span>
+                <span class="legend-dot bg-warning"></span>
+                Reserved
+            </span>
+            <span>138 (11%)</span>
+        </div>
+
+        <div class="d-flex justify-space-between">
+            <span>
+                <span class="legend-dot bg-maintenance"></span>
+                Maintenance
+            </span>
+            <span>40 (4%)</span>
+        </div>
+
+    </div>
+
+</MudCard>
+
+@code {
+    private readonly double[] DonutData =
+    [
+        342,
+        730,
+        138,
+        40
+    ];
+
+    private readonly string[] DonutLabels =
+    [
+        "Available",
+        "Occupied",
+        "Reserved",
+        "Maintenance"
+    ];
+}

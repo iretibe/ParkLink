@@ -20,9 +20,15 @@ namespace ParkLink.Gate.Messaging.Consumers.Reservation
             _logger.LogInformation(
                 "Reservation expired. " +
                 "ReservationId: {ReservationId}, " +
-                "VehicleId: {VehicleId}",
+                "ReservationNumber: {ReservationNumber}, " +
+                "VehicleId: {VehicleId}, " +
+                "ParkingSlotId: {ParkingSlotId}, " +
+                "ExpiredAtUtc: {ExpiredAtUtc}",
                 message.ReservationId,
-                message.VehicleId
+                message.ReservationNumber,
+                message.VehicleId,
+                message.ParkingSlotId,
+                message.ExpiredAtUtc
             );
             
             // Gate reservation projection/cache.

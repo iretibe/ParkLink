@@ -11,30 +11,32 @@ namespace ParkLink.Vehicle.Controllers
         private readonly IVehicleService _vehicleService;
         private readonly ILogger<VehiclesController> _logger;
 
-        public VehiclesController(IVehicleService vehicleService, 
+        public VehiclesController(IVehicleService vehicleService,
             ILogger<VehiclesController> logger)
         {
             _vehicleService = vehicleService;
             _logger = logger;
         }
 
+        // GET: api/vehicles
         [HttpGet]
         [Authorize(Policy = "VehicleManagement")]
         public async Task<IActionResult> GetVehicles(
             [FromQuery] VehicleSearchRequest request,
             CancellationToken cancellationToken)
         {
-            var result = 
+            var result =
                 await _vehicleService.GetVehiclesAsync(request, cancellationToken);
 
             return Ok(result);
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetVehicle(Guid vehicleId, 
-            CancellationToken cancellationToken)
+        // GET: api/vehicles/{vehicleId}
+        [HttpGet("{vehicleId:guid}")]
+        public async Task<IActionResult> GetVehicle(
+            Guid vehicleId, CancellationToken cancellationToken)
         {
-            var vehicle = 
+            var vehicle =
                 await _vehicleService.GetVehicleByIdAsync(vehicleId, cancellationToken);
 
             if (vehicle == null)
@@ -48,49 +50,53 @@ namespace ParkLink.Vehicle.Controllers
             return Ok(vehicle);
         }
 
+        // GET: api/vehicles/my/{vehicleId}
         [HttpGet("my/{vehicleId:guid}")]
-        public async Task<IActionResult> GetMyVehicles(Guid vehicleId,
+        public async Task<IActionResult> GetMyVehicle(Guid vehicleId,
             CancellationToken cancellationToken)
         {
             var ownerId = GetCurrentUserId();
 
-            if (string.IsNullOrWhiteSpace(ownerId))
-            {
-                return Unauthorized();
-            }
+            var vehicle = await _vehicleService.GetMyVehicleAsync(
+                vehicleId, ownerId, cancellationToken);
 
-            var vehicle = await _vehicleService.GetMyVehicleAsync(Guid.Parse(ownerId), ownerId, cancellationToken);
             if (vehicle == null)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Message = $"Vehicle '{vehicleId}' was not found."
+                });
             }
 
             return Ok(vehicle);
         }
 
+        // POST: api/vehicles
         [HttpPost]
         public async Task<IActionResult> CreateVehicle(
-            [FromBody] CreateVehicleRequest request, 
+            [FromBody] CreateVehicleRequest request,
             CancellationToken cancellationToken)
         {
             var ownerId = GetCurrentUserId();
-            if (string.IsNullOrWhiteSpace(ownerId))
-            {
-                return Unauthorized();
-            }
 
             try
             {
                 var vehicle = await _vehicleService.CreateVehicleAsync(
-                        ownerId, request, cancellationToken);
+                    ownerId, request, cancellationToken);
 
                 return CreatedAtAction(
-                    nameof(GetVehicle), 
-                        new { id = vehicle.Id }, 
-                            vehicle);
+                    nameof(GetVehicle),
+                        new { vehicleId = vehicle.Id },
+                            vehicle
+                );
             }
             catch (InvalidOperationException ex)
             {
+                _logger.LogWarning(ex,
+                    "Unable to create vehicle for owner {OwnerId}.",
+                    ownerId
+                );
+
                 return Conflict(new
                 {
                     Message = ex.Message
@@ -98,15 +104,12 @@ namespace ParkLink.Vehicle.Controllers
             }
         }
 
-        [HttpPut("{id:guid}")]
+        // PUT: api/vehicles/{vehicleId}
+        [HttpPut("{vehicleId:guid}")]
         public async Task<IActionResult> UpdateVehicle(Guid vehicleId,
             [FromBody] UpdateVehicleRequest request, CancellationToken cancellationToken)
         {
             var ownerId = GetCurrentUserId();
-            if (string.IsNullOrWhiteSpace(ownerId))
-            {
-                return Unauthorized();
-            }
 
             try
             {
@@ -117,7 +120,10 @@ namespace ParkLink.Vehicle.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Message = $"Vehicle '{vehicleId}' was not found."
+                });
             }
             catch (UnauthorizedAccessException)
             {
@@ -125,6 +131,12 @@ namespace ParkLink.Vehicle.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                _logger.LogWarning(
+                    ex,
+                    "Unable to update vehicle {VehicleId}.",
+                    vehicleId
+                );
+
                 return Conflict(new
                 {
                     Message = ex.Message
@@ -132,32 +144,40 @@ namespace ParkLink.Vehicle.Controllers
             }
         }
 
-        //[HttpPatch("{id:guid}/status")]
-        //[Authorize(Policy = "VehicleManagement")]
-        //public async Task<IActionResult> UpdateStatus(Guid id,
-        //    [FromBody] VehicleStatus status, CancellationToken cancellationToken)
-        //{
-        //    try
-        //    {
-        //        await _vehicleService.UpdateVehicleStatusAsync(id, status, cancellationToken);
+        // PATCH: api/vehicles/{vehicleId}/status
+        /*
+        [HttpPatch("{vehicleId:guid}/status")]
+        [Authorize(Policy = "VehicleManagement")]
+        public async Task<IActionResult> UpdateStatus(
+            Guid vehicleId,
+            [FromBody] VehicleStatus status,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _vehicleService.UpdateVehicleStatusAsync(
+                    vehicleId,
+                    status,
+                    cancellationToken);
 
-        //        return NoContent();
-        //    }
-        //    catch (KeyNotFoundException)
-        //    {
-        //        return NotFound();
-        //    }
-        //}
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new
+                {
+                    Message = $"Vehicle '{vehicleId}' was not found."
+                });
+            }
+        }
+        */
 
-        [HttpDelete("{id:guid}")]
+        // DELETE: api/vehicles/{vehicleId}
+        [HttpDelete("{vehicleId:guid}")]
         public async Task<IActionResult> DeleteVehicle(Guid vehicleId,
             CancellationToken cancellationToken)
         {
             var ownerId = GetCurrentUserId();
-            if (string.IsNullOrWhiteSpace(ownerId))
-            {
-                return Unauthorized();
-            }
 
             try
             {
@@ -167,7 +187,10 @@ namespace ParkLink.Vehicle.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Message = $"Vehicle '{vehicleId}' was not found."
+                });
             }
             catch (UnauthorizedAccessException)
             {
@@ -175,6 +198,7 @@ namespace ParkLink.Vehicle.Controllers
             }
         }
 
+        // POST: api/vehicles/{vehicleId}/verify
         [HttpPost("{vehicleId:guid}/verify")]
         [Authorize(Policy = "VehicleManagement")]
         public async Task<IActionResult> VerifyVehicle(Guid vehicleId,
@@ -182,10 +206,6 @@ namespace ParkLink.Vehicle.Controllers
             CancellationToken cancellationToken)
         {
             var administratorId = GetCurrentUserId();
-            if (string.IsNullOrWhiteSpace(administratorId))
-            {
-                return Unauthorized();
-            }
 
             try
             {
@@ -196,10 +216,14 @@ namespace ParkLink.Vehicle.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Message = $"Vehicle '{vehicleId}' was not found."
+                });
             }
         }
 
+        // POST: api/vehicles/{vehicleId}/suspend
         [HttpPost("{vehicleId:guid}/suspend")]
         [Authorize(Policy = "VehicleManagement")]
         public async Task<IActionResult> SuspendVehicle(Guid vehicleId,
@@ -207,10 +231,6 @@ namespace ParkLink.Vehicle.Controllers
             CancellationToken cancellationToken)
         {
             var administratorId = GetCurrentUserId();
-            if (string.IsNullOrWhiteSpace(administratorId))
-            {
-                return Unauthorized();
-            }
 
             try
             {
@@ -221,10 +241,14 @@ namespace ParkLink.Vehicle.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Message = $"Vehicle '{vehicleId}' was not found."
+                });
             }
         }
 
+        // POST: api/vehicles/{vehicleId}/activate
         [HttpPost("{vehicleId:guid}/activate")]
         [Authorize(Policy = "VehicleManagement")]
         public async Task<IActionResult> ActivateVehicle(
@@ -233,10 +257,6 @@ namespace ParkLink.Vehicle.Controllers
             CancellationToken cancellationToken)
         {
             var administratorId = GetCurrentUserId();
-            if (string.IsNullOrWhiteSpace(administratorId))
-            {
-                return Unauthorized();
-            }
 
             try
             {
@@ -247,13 +267,21 @@ namespace ParkLink.Vehicle.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Message = $"Vehicle '{vehicleId}' was not found."
+                });
             }
             catch (InvalidOperationException ex)
             {
+                _logger.LogWarning(
+                    ex,
+                    "Unable to activate vehicle {VehicleId}.",
+                    vehicleId);
+
                 return Conflict(new
                 {
-                    message = ex.Message
+                    Message = ex.Message
                 });
             }
         }
@@ -261,9 +289,8 @@ namespace ParkLink.Vehicle.Controllers
         private string GetCurrentUserId()
         {
             var userId =
-                User.FindFirstValue(
-                    ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub");
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? User.FindFirst("sub")?.Value;
 
             if (string.IsNullOrWhiteSpace(userId))
             {

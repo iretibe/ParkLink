@@ -1,8 +1,8 @@
 ﻿namespace ParkLink.ServiceDefaults.Correlation
 {
-    public class CorrelationContext : ICorrelationContext
+    public sealed class CorrelationContext : ICorrelationContext
     {
-        private string _correlationId = Guid.NewGuid().ToString();
+        private string _correlationId = Guid.NewGuid().ToString("N");
         public string CorrelationId => _correlationId;
 
         public void Set(string correlationId)

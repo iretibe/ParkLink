@@ -1,0 +1,75 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="@ParkLink.Shared.Theme.ParkLinkTheme.Default" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+
+    <MudAppBar Elevation="1"
+               Dense="true"
+               Class="bg-white px-2">
+
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Dark"
+                       OnClick="ToggleDrawer" />
+
+        <div class="d-flex align-center gap-1 ml-1">
+
+            <div class="brand-logo-small">
+                P
+            </div>
+
+            <MudText Typo="Typo.subtitle1"
+                     Class="font-weight-bold text-primary">
+                ParkLink
+            </MudText>
+
+        </div>
+
+        <MudSpacer />
+
+        <MudBadge Dot="true"
+                  Color="Color.Error"
+                  Overlap="true"
+                  Class="mr-2">
+
+            <MudIconButton Icon="@Icons.Material.Filled.Notifications"
+                           Size="Size.Small"
+                           Color="Color.Dark" />
+
+        </MudBadge>
+
+        <MudAvatar Size="Size.Small">
+            JM
+        </MudAvatar>
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="drawerOpen"
+               Variant="DrawerVariant.Temporary"
+               ClipMode="DrawerClipMode.Always"
+               Elevation="2"
+               Class="blue-sidebar">
+
+        <MobileNavigation OnNavigate="CloseDrawer" />
+    </MudDrawer>
+
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool drawerOpen;
+
+    private void ToggleDrawer()
+    {
+        drawerOpen = !drawerOpen;
+    }
+
+    private void CloseDrawer()
+    {
+        drawerOpen = false;
+    }
+}

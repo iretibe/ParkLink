@@ -42,6 +42,7 @@ namespace ParkLink.Gate.Services.Implementations
 
             var attempt = GateAccessAttempt.Create(
                 request.GateId,
+                request.DeviceId,
                 request.Method,
                 request.DetectedAtUtc,
                 request.LicensePlate,
@@ -141,16 +142,20 @@ namespace ParkLink.Gate.Services.Implementations
 
                 if (payment is null)
                 {
-                    return await DenyAsync(attempt,
+                    return await DenyAsync(
+                        attempt,
                         "Payment information could not be found.",
-                        cancellationToken);
+                        cancellationToken
+                    );
                 }
 
                 if (!payment.IsValid)
                 {
-                    return await DenyAsync(attempt,
+                    return await DenyAsync(
+                        attempt,
                         "Reservation payment is not valid.",
-                        cancellationToken);
+                        cancellationToken
+                    );
                 }
 
                 attempt.Grant("Vehicle, reservation and payment validated.");

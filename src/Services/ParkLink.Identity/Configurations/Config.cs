@@ -44,7 +44,7 @@ namespace ParkLink.Identity.Configurations
                     "parkingapi"
                 }
             },
-            new ApiResource("payment", "Payment System API")
+            new ApiResource("paymentapi", "Payment System API")
             {
                 ApiSecrets =
                 {
@@ -98,6 +98,13 @@ namespace ParkLink.Identity.Configurations
                 {
                     "gateapi"
                 }
+            },
+            new ApiResource("parklink.gateway", "ParkLink API Gateway")
+            {
+                Scopes =
+                {
+                    "parklink.gateway"
+                }
             }
         };
 
@@ -110,7 +117,8 @@ namespace ParkLink.Identity.Configurations
                 new ApiScope("reservationapi", "Reservation System API"),
                 new ApiScope("userapi", "User System API"),
                 new ApiScope("vehicleapi", "Vehicle System API"),
-                new ApiScope("gateapi", "Gate Management API")
+                new ApiScope("gateapi", "Gate Management API"),
+                new ApiScope("parklink.gateway", "ParkLink API Gateway")
         };
 
         public static IEnumerable<Client> Clients(IConfiguration configuration) =>
@@ -128,6 +136,7 @@ namespace ParkLink.Identity.Configurations
                     AllowRememberConsent = true,
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.Address,
@@ -167,6 +176,7 @@ namespace ParkLink.Identity.Configurations
                     AllowRememberConsent = true,
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.Address,
@@ -206,6 +216,7 @@ namespace ParkLink.Identity.Configurations
                     AllowRememberConsent = true,
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.Address,
@@ -245,6 +256,7 @@ namespace ParkLink.Identity.Configurations
                     AllowRememberConsent = true,
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.Address,
@@ -284,6 +296,7 @@ namespace ParkLink.Identity.Configurations
                     AllowRememberConsent = true,
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.Address,
@@ -323,6 +336,7 @@ namespace ParkLink.Identity.Configurations
                     AllowRememberConsent = true,
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.Address,
@@ -361,6 +375,7 @@ namespace ParkLink.Identity.Configurations
                     AllowRememberConsent = true,
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -399,6 +414,7 @@ namespace ParkLink.Identity.Configurations
                     AllowRememberConsent = true,
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.Address,
@@ -411,7 +427,8 @@ namespace ParkLink.Identity.Configurations
                         "reservationapi",
                         "userapi",
                         "vehicleapi",
-                        "gateapi"
+                        "gateapi",
+                        "parklink.gateway"
                     },
                     AllowedCorsOrigins = new []
                     {
@@ -444,6 +461,7 @@ namespace ParkLink.Identity.Configurations
                     AllowRememberConsent = true,
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.Address,
@@ -456,7 +474,8 @@ namespace ParkLink.Identity.Configurations
                         "reservationapi",
                         "userapi",
                         "vehicleapi",
-                        "gateapi"
+                        "gateapi",
+                        "parklink.gateway"
                     },
                     AllowedCorsOrigins = new []
                     {
@@ -475,9 +494,10 @@ namespace ParkLink.Identity.Configurations
 				    AbsoluteRefreshTokenLifetime = 2592000, // 30 days
 				    SlidingRefreshTokenLifetime = 1296000, // 15 days
                 },
-                // GATE SERVICE - MACHINE TO MACHINE
-                // ParkLink.Gate uses this client to obtain an
-                // access token through Client Credentials.
+                /* GATE SERVICE - MACHINE TO MACHINE
+                   This is NOT a public client.
+                   It is used when GateService needs to communicate
+                   with other APIs using client credentials. */
                 new Client
                 {
                     ClientId = "ParkLinkGateService",

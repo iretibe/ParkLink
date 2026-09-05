@@ -19,8 +19,8 @@
 
             if (confidence < 0 || confidence > 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(confidence), 
-                    "OCR confidence cannot be between 0 and 1.");
+                throw new ArgumentOutOfRangeException(nameof(confidence),
+                    "OCR confidence must be between 0 and 1.");
             }
 
             return new OcrRecognition

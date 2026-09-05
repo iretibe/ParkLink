@@ -1,0 +1,162 @@
+﻿@using ParkLink.Shared.Models.Dashboard
+
+<MudGrid Class="mb-4">
+
+    <!-- Total Slots -->
+
+    <MudItem xs="12" sm="6" md="3">
+
+        <MudCard Elevation="1"
+                 Class="pa-4 rounded-xl dashboard-card">
+
+            <div class="d-flex align-center justify-space-between mb-2">
+
+                <MudText Typo="Typo.body2"
+                         Class="mud-text-secondary">
+                    Total Slots
+                </MudText>
+
+                <MudAvatar Color="Color.Primary"
+                           Variant="Variant.Filled"
+                           Size="Size.Medium">
+
+                    <MudIcon Icon="@Icons.Material.Filled.LocalParking" />
+
+                </MudAvatar>
+
+            </div>
+
+            <MudText Typo="Typo.h4"
+                     Class="font-weight-bold mb-1">
+                @DashboardData.TotalSlots.ToString("N0")
+            </MudText>
+
+            <MudText Typo="Typo.caption"
+                     Class="mud-text-secondary">
+                All Parking Lots
+            </MudText>
+
+        </MudCard>
+
+    </MudItem>
+
+    <!-- Available -->
+
+    <MudItem xs="12" sm="6" md="3">
+
+        <MudCard Elevation="1"
+                 Class="pa-4 rounded-xl dashboard-card">
+
+            <div class="d-flex align-center justify-space-between mb-2">
+
+                <MudText Typo="Typo.body2"
+                         Class="mud-text-secondary">
+                    Available Slots
+                </MudText>
+
+                <MudAvatar Color="Color.Success"
+                           Variant="Variant.Filled"
+                           Size="Size.Medium">
+
+                    <MudIcon Icon="@Icons.Material.Filled.DirectionsCar" />
+
+                </MudAvatar>
+
+            </div>
+
+            <MudText Typo="Typo.h4"
+                     Class="font-weight-bold mb-1">
+                @DashboardData.AvailableSlots
+            </MudText>
+
+            <MudText Typo="Typo.caption"
+                     Class="success-text">
+                @DashboardData.AvailablePercentage.ToString("0.00")% Available
+            </MudText>
+
+        </MudCard>
+
+    </MudItem>
+
+    <!-- Bookings -->
+
+    <MudItem xs="12" sm="6" md="3">
+
+        <MudCard Elevation="1"
+                 Class="pa-4 rounded-xl dashboard-card">
+
+            <div class="d-flex align-center justify-space-between mb-2">
+
+                <MudText Typo="Typo.body2"
+                         Class="mud-text-secondary">
+                    Today's Bookings
+                </MudText>
+
+                <MudAvatar Color="Color.Warning"
+                           Variant="Variant.Filled"
+                           Size="Size.Medium">
+
+                    <MudIcon Icon="@Icons.Material.Filled.DateRange" />
+
+                </MudAvatar>
+
+            </div>
+
+            <MudText Typo="Typo.h4"
+                     Class="font-weight-bold mb-1">
+                @DashboardData.TodaysBookings
+            </MudText>
+
+            <MudText Typo="Typo.caption"
+                     Class="success-text">
+                +12.5% vs yesterday
+            </MudText>
+
+        </MudCard>
+
+    </MudItem>
+
+    <!-- Revenue -->
+
+    <MudItem xs="12" sm="6" md="3">
+
+        <MudCard Elevation="1"
+                 Class="pa-4 rounded-xl dashboard-card">
+
+            <div class="d-flex align-center justify-space-between mb-2">
+
+                <MudText Typo="Typo.body2"
+                         Class="mud-text-secondary">
+                    Today's Revenue
+                </MudText>
+
+                <MudAvatar Variant="Variant.Filled"
+                           Size="Size.Medium"
+                           Style="background-color:#7b1fa2;color:white;">
+
+                    <MudIcon Icon="@Icons.Material.Filled.AttachMoney" />
+
+                </MudAvatar>
+
+            </div>
+
+            <MudText Typo="Typo.h4"
+                     Class="font-weight-bold mb-1">
+                GH₵ @DashboardData.TodaysRevenue.ToString("N0")
+            </MudText>
+
+            <MudText Typo="Typo.caption"
+                     Class="success-text">
+                +18.7% vs yesterday
+            </MudText>
+
+        </MudCard>
+
+    </MudItem>
+
+</MudGrid>
+
+@code {
+    [Parameter, EditorRequired]
+    public DashboardDataModel DashboardData { get; set; } = new();
+}

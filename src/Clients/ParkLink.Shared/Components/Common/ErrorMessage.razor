@@ -1,0 +1,42 @@
+﻿@if (!string.IsNullOrWhiteSpace(Message))
+{
+    <MudAlert Severity="Severity.Error"
+              Variant="Variant.Filled"
+              Dense="true"
+              Class="mb-4">
+
+        <div class="d-flex align-center justify-space-between">
+
+            <MudText>
+                @Message
+            </MudText>
+
+            @if (OnRetry.HasDelegate)
+            {
+                <MudButton Color="Color.Inherit"
+                           Variant="Variant.Text"
+                           Size="Size.Small"
+                           OnClick="Retry">
+                    Retry
+                </MudButton>
+            }
+
+        </div>
+
+    </MudAlert>
+}
+
+@code {
+
+    [Parameter]
+    public string? Message { get; set; }
+
+    [Parameter]
+    public EventCallback OnRetry { get; set; }
+
+    private async Task Retry()
+    {
+        await OnRetry.InvokeAsync();
+    }
+
+}

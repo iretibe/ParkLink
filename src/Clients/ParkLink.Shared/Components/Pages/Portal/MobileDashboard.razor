@@ -1,0 +1,288 @@
+﻿@page "/mobile-dashboard"
+
+@using ParkLink.Shared.Models.Dashboard
+@using ParkLink.Shared.Services.Api
+
+@inject IParkingService _parkingService
+
+<PageTitle>ParkLink - Dashboard</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="px-3 pt-4 pb-8 mobile-dashboard">
+    <!-- Header -->
+    <div class="mb-3">
+        <MudText Typo="Typo.h6" Class="font-weight-bold">
+            Dashboard
+        </MudText>
+
+        <MudText Typo="Typo.caption" Class="mud-text-secondary">
+            Welcome back, John! Here's today's overview.
+        </MudText>
+    </div>
+
+    <!-- KPI -->
+    <MudGrid Spacing="2" Class="mb-3">
+        <MudItem xs="6">
+            <MudCard Elevation="1" Class="pa-3 rounded-xl">
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                    Total Slots
+                </MudText>
+
+                <MudText Typo="Typo.h6" Class="font-weight-bold">
+                    @dashboardData.TotalSlots.ToString("N0")
+                </MudText>
+
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                    All Lots
+                </MudText>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudCard Elevation="1" Class="pa-3 rounded-xl">
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                    Available
+                </MudText>
+
+                <MudText Typo="Typo.h6" Class="font-weight-bold">
+                    @dashboardData.AvailableSlots
+                </MudText>
+
+                <MudText Typo="Typo.caption" Class="success-text">
+                    @dashboardData.AvailablePercentage.ToString("0.0")%
+                </MudText>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudCard Elevation="1" Class="pa-3 rounded-xl">
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                    Bookings
+                </MudText>
+
+                <MudText Typo="Typo.h6" Class="font-weight-bold">
+                    @dashboardData.TodaysBookings
+                </MudText>
+
+                <MudText Typo="Typo.caption" Class="success-text">
+                    +12.5%
+                </MudText>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudCard Elevation="1" Class="pa-3 rounded-xl">
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                    Revenue
+                </MudText>
+
+                <MudText Typo="Typo.subtitle1" Class="font-weight-bold">
+                    GH₵ @dashboardData.TodaysRevenue.ToString("N0")
+                </MudText>
+
+                <MudText Typo="Typo.caption" Class="success-text">
+                    +18.7%
+                </MudText>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Live Map -->
+    <MudCard Elevation="1" Class="pa-3 rounded-xl mb-3">
+        <div class="d-flex align-center justify-space-between mb-2">
+            <div class="d-flex align-center gap-1">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold">
+                    Live Parking
+                </MudText>
+
+                <MudChip T="string" Color="Color.Success"
+                         Size="Size.Small" Variant="Variant.Text">
+                    ● Live
+                </MudChip>
+            </div>
+
+            <MudSelect T="Guid"
+                       Value="selectedParkingId"
+                       ValueChanged="@(v => OnParkingChanged(v))"
+                       Variant="Variant.Outlined"
+                       Dense="true"
+                       Margin="Margin.Dense"
+                       Style="width: 220px;">
+
+                @foreach (var parking in parkings)
+                {
+                    <MudSelectItem T="Guid" Value="@parking.Id">
+                        @parking.Name
+                    </MudSelectItem>
+                }
+            </MudSelect>
+        </div>
+
+        <div class="mobile-map-scroll-container pa-2 rounded-lg grey-background">
+            @foreach (var rowGroup in parkingSlots.GroupBy(x => x.Row))
+            {
+                <div class="d-flex align-center gap-1 mb-1">
+                    <div class="row-label-mobile font-weight-bold text-center">
+                        @rowGroup.Key
+                    </div>
+
+                    <div class="d-flex gap-1">
+                        @foreach (var slot in rowGroup)
+                        {
+                            <div class="slot-box-mobile @GetSlotClass(slot.Status)">
+                                @slot.Number.ToString("00")
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </MudCard>
+
+    <!-- Reservations -->
+    <MudCard Elevation="1" Class="pa-3 rounded-xl mb-3">
+        <div class="d-flex align-center justify-space-between mb-2">
+            <MudText Typo="Typo.subtitle2" Class="font-weight-bold">
+                Recent Reservations
+            </MudText>
+
+            <MudLink Href="/reservations" Typo="Typo.caption"
+                     Color="Color.Primary" Underline="Underline.None">
+                View all
+            </MudLink>
+
+        </div>
+
+        @foreach (var res in reservations)
+        {
+            <div class="d-flex align-center justify-space-between pb-2 mb-2 border-bottom">
+
+                <div class="d-flex align-center gap-2">
+                    <MudAvatar Color="Color.Primary" Size="Size.Small">
+                        @res.Initials
+                    </MudAvatar>
+
+                    <div>
+                        <MudText Typo="Typo.body2" Class="font-weight-bold">
+                            @res.Name
+                        </MudText>
+
+                        <MudText Typo="Typo.caption" Color="Color.Primary">
+                            @res.Slot
+                        </MudText>
+                    </div>
+                </div>
+
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                    @res.Time
+                </MudText>
+            </div>
+        }
+    </MudCard>
+
+    <!-- Occupancy -->
+    <MudCard Elevation="1"
+             Class="pa-3 rounded-xl">
+
+        <MudText Typo="Typo.subtitle2"
+                 Class="font-weight-bold mb-2">
+            Occupancy Overview
+        </MudText>
+
+        <div class="d-flex flex-column align-center">
+
+            <MudChart T="double" ChartType="ChartType.Donut"
+                      Width="140px"
+                      Height="140px"
+                      InputData="@donutData"
+                      InputLabels="@donutLabels">
+
+                <CustomGraphics>
+
+                    <text x="50%"
+                          y="45%"
+                          dominant-baseline="middle"
+                          text-anchor="middle"
+                          class="font-weight-bold"
+                          font-size="18px">
+                        73%
+                    </text>
+
+                    <text x="50%"
+                          y="58%"
+                          dominant-baseline="middle"
+                          text-anchor="middle"
+                          class="mud-text-secondary"
+                          font-size="10px">
+                        Occupied
+                    </text>
+
+                </CustomGraphics>
+
+            </MudChart>
+
+        </div>
+
+    </MudCard>
+
+</MudContainer>
+
+@code {
+    private DashboardDataModel dashboardData = new();
+    private List<ParkingSlotModel> parkingSlots = [];
+    private List<ReservationModel> reservations = [];
+    private List<ParkingModel> parkings = [];
+    private List<SystemNotificationModel> notifications = [];
+    private Guid selectedParkingId;
+
+    private readonly double[] donutData =
+    [
+        342,
+        730,
+        138,
+        40
+    ];
+
+    private readonly string[] donutLabels =
+    [
+        "Available",
+        "Occupied",
+        "Reserved",
+        "Maintenance"
+    ];
+
+    protected override async Task OnInitializedAsync()
+    {
+        dashboardData = await _parkingService.GetDashboardDataAsync();
+        parkings = (await _parkingService.GetParkingsAsync()).ToList();
+        reservations = (await _parkingService.GetRecentReservationsAsync()).ToList();
+        notifications = (await _parkingService.GetNotificationsAsync()).ToList();
+        if (parkings.Count > 0)
+        {
+            selectedParkingId = parkings[0].Id;
+
+            parkingSlots = (await _parkingService
+                .GetParkingSlotsAsync(selectedParkingId))
+                .ToList();
+        }
+    }
+
+    private async Task OnParkingChanged(Guid parkingId)
+    {
+        selectedParkingId = parkingId;
+
+        parkingSlots =
+            (await _parkingService
+                .GetParkingSlotsAsync(parkingId))
+            .ToList();
+    }
+
+    private static string GetSlotClass(string status) =>
+        status switch
+        {
+            "Available" => "slot-available",
+            "Occupied" => "slot-occupied",
+            "Reserved" => "slot-reserved",
+            "Maintenance" => "slot-maintenance",
+            _ => "slot-available"
+        };
+}

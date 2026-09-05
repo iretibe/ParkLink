@@ -4,7 +4,6 @@
     {
         Rfid = 1,
         Ocr = 2,
-        Manual = 3,
-        Reservation = 4
+        Manual = 3
     }
 }

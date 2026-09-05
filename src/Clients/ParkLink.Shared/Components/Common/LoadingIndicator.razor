@@ -1,0 +1,47 @@
+﻿@if (FullScreen)
+{
+    <div class="d-flex flex-column align-center justify-center"
+         style="min-height:300px;">
+
+        <MudProgressCircular Color="Color.Primary"
+                             Size="Size.Medium"
+                             Indeterminate="true" />
+
+        @if (!string.IsNullOrWhiteSpace(Message))
+        {
+            <MudText Typo="Typo.body2"
+                     Class="mt-3 mud-text-secondary">
+                @Message
+            </MudText>
+        }
+
+    </div>
+}
+else
+{
+    <div class="d-flex align-center justify-center pa-4">
+
+        <MudProgressCircular Color="Color.Primary"
+                             Size="Size.Small"
+                             Indeterminate="true" />
+
+        @if (!string.IsNullOrWhiteSpace(Message))
+        {
+            <MudText Typo="Typo.body2"
+                     Class="ml-2 mud-text-secondary">
+                @Message
+            </MudText>
+        }
+
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public bool FullScreen { get; set; }
+
+    [Parameter]
+    public string Message { get; set; } = "Loading...";
+
+}

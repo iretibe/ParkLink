@@ -5,18 +5,14 @@ using Microsoft.Extensions.Logging;
 
 namespace ParkLink.ServiceDefaults.Exceptions
 {
-    public sealed class GlobalExceptionHandler : IExceptionHandler
+    public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) 
+        : IExceptionHandler
     {
-        private readonly ILogger<GlobalExceptionHandler> _logger;
-
-        public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
-        {
-            _logger = logger;
-        }
-
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext,
             Exception exception, CancellationToken cancellationToken)
         {
+            var statusCode = GetStatusCode(exception);
+
             var problemDetails = new ProblemDetails
             {
                 Status = GetStatusCode(exception),
@@ -33,13 +29,13 @@ namespace ParkLink.ServiceDefaults.Exceptions
                 problemDetails.Extensions["correlationId"] = correlationId.ToString();
             }
 
-            _logger.LogError(
+            logger.LogError(
                 exception,
                 "Unhandled exception. TraceId: {TraceId}, CorrelationId: {CorrelationId}",
                 httpContext.TraceIdentifier,
                 correlationId.ToString());
 
-            httpContext.Response.StatusCode = problemDetails.Status!.Value;
+            httpContext.Response.StatusCode = statusCode;
 
             await httpContext.Response.WriteAsJsonAsync(problemDetails,
                 cancellationToken);

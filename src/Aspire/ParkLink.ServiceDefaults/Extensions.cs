@@ -54,7 +54,8 @@ namespace Microsoft.Extensions.Hosting
                 logging.IncludeScopes = true;
             });
 
-            builder.Services.AddOpenTelemetry()
+            builder.Services
+                .AddOpenTelemetry()
                 .WithMetrics(metrics =>
                 {
                     metrics.AddAspNetCoreInstrumentation()
@@ -86,7 +87,9 @@ namespace Microsoft.Extensions.Hosting
 
             if (useOtlpExporter)
             {
-                builder.Services.AddOpenTelemetry().UseOtlpExporter();
+                builder.Services
+                    .AddOpenTelemetry()
+                    .UseOtlpExporter();
             }
 
             // Uncomment the following lines to enable the Azure Monitor exporter (requires the Azure.Monitor.OpenTelemetry.AspNetCore package)

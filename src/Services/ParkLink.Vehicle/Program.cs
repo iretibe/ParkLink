@@ -96,7 +96,7 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ApiScope", policy =>
+    options.AddPolicy("VehicleManagement", policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireClaim("scope", "vehicleapi");

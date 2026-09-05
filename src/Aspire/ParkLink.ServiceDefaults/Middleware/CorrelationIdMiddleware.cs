@@ -21,22 +21,41 @@ namespace ParkLink.ServiceDefaults.Middleware
             ILogger<CorrelationIdMiddleware> logger)
         {
             var correlationId =
-                context.Request.Headers[HeaderName].FirstOrDefault()
-                    ?? Activity.Current?.TraceId.ToString()
-                    ?? Guid.NewGuid().ToString();
+                context.Request.Headers[HeaderName].FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(correlationId)) 
+            { 
+                correlationId = Activity.Current?.TraceId.ToString() 
+                    ?? Guid.NewGuid().ToString("N"); 
+            }
 
             correlationContext.Set(correlationId);
 
-            context.Response.Headers[HeaderName] = correlationId;
+            context.Response.OnStarting(() => 
+            { 
+                context.Response.Headers[HeaderName] = correlationId; 
 
-            using var scope =
-                logger.BeginScope(
-                    new Dictionary<string, object>
-                    {
-                        ["CorrelationId"] = correlationId
-                    });
+                return Task.CompletedTask; 
+            });
 
-            await _next(context);
+            using var scope = logger.BeginScope(
+                new Dictionary<string, object> 
+                { 
+                    ["CorrelationId"] = correlationId 
+                }
+            );
+
+            //await _next(context);
+
+            try
+            {
+                await _next(context);
+            }
+            catch (TaskCanceledException ex)
+            {
+                logger.LogWarning(ex, "Request canceled. RequestAborted={RequestAborted}", context.RequestAborted.IsCancellationRequested);
+                throw;
+            }
         }
     }
 }

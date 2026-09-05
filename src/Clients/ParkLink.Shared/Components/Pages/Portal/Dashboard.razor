@@ -1,0 +1,77 @@
+﻿@page "/"
+
+@using ParkLink.Shared.Components.Dashboard
+@using ParkLink.Shared.Models.Dashboard
+@using ParkLink.Shared.Services.Api
+
+@inject IParkingService _parkingService
+
+<PageTitle>ParkLink - Dashboard</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="pa-4">
+    <!-- Header -->
+    <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">
+        Dashboard
+    </MudText>
+
+    <MudText Typo="Typo.body2" Class="mud-text-secondary mb-4">
+        Welcome back, John! Here's what's happening today.
+    </MudText>
+
+    <!-- KPI -->
+    <StatisticsCards DashboardData="@dashboardData" />
+
+    <!-- Parking + Reservations -->
+    <MudGrid Class="mb-4">
+        <MudItem xs="12" md="8">
+            <LiveParkingMap ParkingSlots="@parkingSlots" SelectedLocation="@selectedLocation" />
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <RecentReservations Reservations="@reservations" />
+        </MudItem>
+    </MudGrid>
+
+    <!-- Bottom widgets -->
+    <MudGrid>
+
+        <MudItem xs="12" md="4">
+            <OccupancyOverview DashboardData="@dashboardData" />
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <RevenueOverview />
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <SystemNotifications Notifications="@notifications" />
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private DashboardDataModel dashboardData = new();
+    private List<ParkingSlotModel> parkingSlots = [];
+    private List<ReservationModel> reservations = [];
+    private List<ParkingModel> parkings = [];
+    private List<SystemNotificationModel> notifications = [];
+    private Guid selectedParkingId;
+    private string selectedLocation = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dashboardData = await _parkingService.GetDashboardDataAsync();
+        parkings = (await _parkingService.GetParkingsAsync()).ToList();
+        reservations = (await _parkingService.GetRecentReservationsAsync()).ToList();
+        notifications = (await _parkingService.GetNotificationsAsync()).ToList();
+        if (parkings.Count > 0)
+        {
+            selectedParkingId = parkings[0].Id;
+            selectedLocation = parkings[0].Name;
+
+            parkingSlots = (await _parkingService
+                .GetParkingSlotsAsync(selectedParkingId))
+                .ToList();
+        }
+    }
+}

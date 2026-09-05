@@ -78,5 +78,17 @@ namespace ParkLink.Gate.Entities
             Status = DeviceStatus.Faulted;
             UpdatedAtUtc = DateTime.UtcNow;
         }
+
+        public void MarkMaintenance()
+        {
+            Status = DeviceStatus.Maintenance;
+            UpdatedAtUtc = DateTime.UtcNow;
+        }
+
+        public void Disable()
+        {
+            Status = DeviceStatus.Disabled;
+            UpdatedAtUtc = DateTime.UtcNow;
+        }
     }
 }

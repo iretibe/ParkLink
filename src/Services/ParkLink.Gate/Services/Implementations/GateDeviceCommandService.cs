@@ -76,6 +76,15 @@ namespace ParkLink.Gate.Services.Implementations
                     cancellationToken
                 );
 
+            if (device?.Status != DeviceStatus.Online)
+            {
+                return new GateDeviceCommandResult(
+                    false,
+                    Guid.Empty,
+                    command,
+                    $"Device is not online. Current status: {device?.Status}.");
+            }
+
             if (device is null)
             {
                 return new GateDeviceCommandResult(
@@ -129,6 +138,10 @@ namespace ParkLink.Gate.Services.Implementations
                         : commandEntity.ErrorMessage,
                     commandEntity.CompletedAtUtc
                 );
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {

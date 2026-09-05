@@ -1,0 +1,64 @@
+﻿<div class="pa-4">
+
+    <div class="d-flex align-center gap-2 mb-4">
+
+        <div class="brand-logo-icon">
+            P
+        </div>
+
+        <div>
+            <MudText Typo="Typo.h6"
+                     Class="font-weight-bold white-text">
+                ParkLink
+            </MudText>
+
+            <MudText Typo="Typo.caption"
+                     Style="color:rgba(255,255,255,.7);font-size:10px;">
+                Smart Parking
+            </MudText>
+        </div>
+    </div>
+</div>
+
+<MudNavMenu Class="pa-2 custom-nav-menu">
+
+    <MudNavLink Href="/mobile-dashboard"
+                Icon="@Icons.Material.Filled.Dashboard"
+                OnClick="Navigate">
+        Dashboard
+    </MudNavLink>
+
+    <MudNavLink Href="/parking"
+                Icon="@Icons.Material.Filled.LocalParking"
+                OnClick="Navigate">
+        Find Parking
+    </MudNavLink>
+
+    <MudNavLink Href="/reservations"
+                Icon="@Icons.Material.Filled.CalendarMonth"
+                OnClick="Navigate">
+        Reservations
+    </MudNavLink>
+
+    <MudNavLink Href="/vehicles"
+                Icon="@Icons.Material.Filled.DirectionsCar"
+                OnClick="Navigate">
+        Vehicles
+    </MudNavLink>
+
+    <MudNavLink Href="/payments"
+                Icon="@Icons.Material.Filled.Payment"
+                OnClick="Navigate">
+        Payments
+    </MudNavLink>
+</MudNavMenu>
+
+@code {
+    [Parameter]
+    public EventCallback OnNavigate { get; set; }
+
+    private async Task Navigate()
+    {
+        await OnNavigate.InvokeAsync();
+    }
+}

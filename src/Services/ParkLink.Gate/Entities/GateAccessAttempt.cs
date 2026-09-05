@@ -8,6 +8,7 @@ namespace ParkLink.Gate.Entities
 
         public Guid Id { get; private set; }
         public Guid GateId { get; private set; }
+        public Guid? DeviceId { get; private set; }
         public Guid? VehicleId { get; private set; }
         public string? UserId { get; private set; }
         public Guid? ReservationId { get; private set; }
@@ -24,14 +25,15 @@ namespace ParkLink.Gate.Entities
 
         public Gate Gate { get; private set; } = null!;
 
-        public static GateAccessAttempt Create(Guid gateId, 
-            AccessMethod method, DateTime detectedAtUtc, 
+        public static GateAccessAttempt Create(Guid gateId,
+            Guid? deviceId, AccessMethod method, DateTime detectedAtUtc, 
             string? licensePlate = null, string? rfidTagIdentifier = null)
         {
             return new GateAccessAttempt
             {
                 Id = Guid.NewGuid(),
                 GateId = gateId,
+                DeviceId = deviceId,
                 Method = method,
                 LicensePlate = licensePlate,
                 RfidTagIdentifier = rfidTagIdentifier,
@@ -48,8 +50,23 @@ namespace ParkLink.Gate.Entities
             ReservationId = reservationId;
         }
 
+        public void StartValidation()
+        {
+            if (Status != AccessAttemptStatus.Detected)
+                throw new InvalidOperationException(
+                    "Access attempt is not in a valid state for validation.");
+
+            Status = AccessAttemptStatus.Validating;
+        }
+
         public void Grant(string reason)
         {
+            if (Status != AccessAttemptStatus.Validating)
+                throw new InvalidOperationException(
+                    "Access attempt is not being validated.");
+
+            ArgumentException.ThrowIfNullOrWhiteSpace(reason);
+
             Status = AccessAttemptStatus.Granted;
             Decision = AccessDecision.Granted;
             DecisionReason = reason;
@@ -58,6 +75,15 @@ namespace ParkLink.Gate.Entities
 
         public void Deny(string reason)
         {
+            if (Status != AccessAttemptStatus.Detected &&
+                Status != AccessAttemptStatus.Validating)
+            {
+                throw new InvalidOperationException(
+                    "Access attempt cannot be denied in its current state.");
+            }
+
+            ArgumentException.ThrowIfNullOrWhiteSpace(reason);
+
             Status = AccessAttemptStatus.Denied;
             Decision = AccessDecision.Denied;
             DecisionReason = reason;
@@ -66,6 +92,8 @@ namespace ParkLink.Gate.Entities
 
         public void Fail(string reason)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(reason);
+
             Status = AccessAttemptStatus.Failed;
             Decision = AccessDecision.Error;
             DecisionReason = reason;
@@ -78,21 +106,16 @@ namespace ParkLink.Gate.Entities
                 throw new InvalidOperationException(
                     "The gate cannot be marked as opened unless access was granted.");
 
+            if (GateOpenedAtUtc.HasValue) return;
+
             GateOpenedAtUtc = DateTime.UtcNow;
         }
 
         public void Complete()
         {
+            if (CompletedAtUtc.HasValue) return;
+
             CompletedAtUtc = DateTime.UtcNow;
-        }
-
-        public void StartValidation()
-        {
-            if (Status != AccessAttemptStatus.Detected)
-                throw new InvalidOperationException(
-                    "Access attempt is not in a valid state for validation.");
-
-            Status = AccessAttemptStatus.Validating;
         }
     }
 }

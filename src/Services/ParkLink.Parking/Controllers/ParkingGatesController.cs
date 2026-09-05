@@ -61,7 +61,7 @@ namespace ParkLink.Parking.Controllers
             {
                 var result = await _service.CreateParkingGateAsync(request, cancellationToken);
 
-                return CreatedAtAction(nameof(GetParkingGate), 
+                return CreatedAtAction(nameof(GetParkingGate),
                     new { id = result.Id }, result);
             }
             catch (InvalidOperationException ex)

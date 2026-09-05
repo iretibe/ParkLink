@@ -105,7 +105,7 @@ namespace ParkLink.Reservation.Controllers
 
             try
             {
-                var result = await _service.CreateReservationAsync(userId, 
+                var result = await _service.CreateReservationAsync(userId,
                     request, cancellationToken);
 
                 return CreatedAtAction(

@@ -5,7 +5,7 @@
         Guid GateId,
         Guid VehicleId,
         Guid? ReservationId,
-        string LicensePlate,
+        string? LicensePlate,
         DateTime CompletedAtUtc
     );
 }

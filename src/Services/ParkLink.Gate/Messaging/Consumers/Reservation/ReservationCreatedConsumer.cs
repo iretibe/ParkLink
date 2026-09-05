@@ -18,13 +18,25 @@ namespace ParkLink.Gate.Messaging.Consumers.Reservation
             var message = context.Message;
 
             _logger.LogInformation(
-               "Reservation created. " +
-               "ReservationId: {ReservationId}, " +
-               "VehicleId: {VehicleId}, " +
-               "ParkingSlotId: {ParkingSlotId}",
-               message.ReservationId,
-               message.VehicleId,
-               message.ParkingSlotId
+                "Reservation created. " +
+                "ReservationId: {ReservationId}, " +
+                "ReservationNumber: {ReservationNumber}, " +
+                "UserId: {UserId}, " +
+                "VehicleId: {VehicleId}, " +
+                "ParkingLotId: {ParkingLotId}, " +
+                "ParkingZoneId: {ParkingZoneId}, " +
+                "ParkingSlotId: {ParkingSlotId}, " +
+                "StartTime: {StartTimeUtc}, " +
+                "EndTime: {EndTimeUtc}",
+                message.ReservationId,
+                message.ReservationNumber,
+                message.UserId,
+                message.VehicleId,
+                message.ParkingLotId,
+                message.ParkingZoneId,
+                message.ParkingSlotId,
+                message.StartTimeUtc,
+                message.EndTimeUtc
             );
 
             // Update Gate reservation projection/cache if required.
